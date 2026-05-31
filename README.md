@@ -61,6 +61,10 @@ Start at [`curriculum/overview.md`](curriculum/overview.md) → then
 Keep your work in [`curriculum/my-eval-plan-template.md`](curriculum/my-eval-plan-template.md).
 Stuck on a term? [`GLOSSARY.md`](GLOSSARY.md) defines every one in plain English.
 
+> **Prefer to read the whole story first?** [`curriculum/study-notes.md`](curriculum/study-notes.md)
+> tells the entire eval lifecycle as one flowing ~35-minute read — no exercises, no homework.
+> Read it through for the *why*, then do the course for the *how*.
+
 ---
 
 ## What's in this repo
@@ -70,6 +74,7 @@ README.md                          ← you are here
 GLOSSARY.md                        ← every term, in plain English
 curriculum/
   overview.md                      ← the 10-day map + how to take the course
+  study-notes.md                   ← the whole story as one flowing read (~35 min)
   day-01.md … day-10.md            ← the lessons
   my-eval-plan-template.md         ← your running worksheet (the deliverable)
 design/

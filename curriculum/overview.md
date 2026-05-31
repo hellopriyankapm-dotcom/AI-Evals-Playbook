@@ -3,6 +3,10 @@
 **10 days. ~12 minutes of reading a day. One exercise a day. No code.**
 By the end you'll have a real eval practice and a one-page Eval Plan for your own AI feature.
 
+> **Prefer to read it all at once before you start?** [`study-notes.md`](study-notes.md) tells the
+> whole eval story as one flowing ~35-minute read — no exercises. Read it for the *why*, then come
+> back and walk the course for the *how*.
+
 ---
 
 ## The promise
