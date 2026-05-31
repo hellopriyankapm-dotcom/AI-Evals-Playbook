@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The AI Evals Playbook — Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F6FB;--card:#fff;--ink:#13151c;--ink-2:#3b3f4c;--muted:#71768a;--line:#E7E9F2;
+  --primary:#5B5BD6;--primary-soft:#ECECFB;--primary-tint:#F3F3FE;
+  --aurora:linear-gradient(135deg,#6366F1 0%,#7C8CF8 40%,#22B8A6 100%);
+  --aurora-soft:linear-gradient(135deg,#EEF0FF 0%,#EDF7F4 100%);
+  --shadow:0 14px 38px rgba(30,30,70,.08);--serif:"Space Grotesk",sans-serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 18px}
+.wrap{max-width:760px;width:100%}
+.hero{background:var(--aurora-soft);border:1px solid var(--line);border-radius:24px;padding:40px 30px;text-align:center;margin-bottom:22px}
+.tag{display:inline-block;background:#fff;border:1px solid var(--line);color:var(--primary);font-weight:600;font-size:12px;
+  padding:5px 13px;border-radius:999px;margin-bottom:16px}
+h1{font-family:var(--serif);font-size:34px;font-weight:700;letter-spacing:-.5px;line-height:1.14;margin-bottom:10px}
+h1 .grad{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:16px;color:var(--ink-2);max-width:480px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+a.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;
+  text-decoration:none;color:inherit;box-shadow:var(--shadow);transition:.15s}
+a.card:hover{transform:translateY(-3px);border-color:var(--primary)}
+.card .ic{width:42px;height:42px;border-radius:11px;background:var(--primary-tint);display:flex;align-items:center;
+  justify-content:center;font-size:20px;margin-bottom:14px}
+.card h3{font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:5px}
+.card p{font-size:13.5px;color:var(--muted);margin-bottom:10px}
+.card .go{font-size:13px;font-weight:600;color:var(--primary)}
+.foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">DESIGN PREVIEW</span>
+    <h1>The AI Evals Playbook <span class="grad">— web app</span></h1>
+    <p>One app, two ways in: <b>do it</b> as a 10-day trail, or <b>read it</b> as one flowing study-notes session. Pick a screen to explore.</p>
+  </div>
+  <div class="grid">
+    <a class="card" href="/design/mockup/index.html">
+      <div class="ic">🗺️</div>
+      <h3>The 10-day course</h3>
+      <p>The clickable app: landing → the day-by-day trail → a lesson → your running Eval Plan.</p>
+      <span class="go">Open the app →</span>
+    </a>
+    <a class="card" href="/design/preview/study-notes.html">
+      <div class="ic">📖</div>
+      <h3>Study Notes</h3>
+      <p>The "read it all at once" view — the whole eval story as one ~35-min flowing read.</p>
+      <span class="go">Open the notes →</span>
+    </a>
+    <a class="card" href="/design/preview/directions.html">
+      <div class="ic">🎨</div>
+      <h3>Design directions</h3>
+      <p>The three visual explorations (Editorial / Aurora / Focus Dark) behind the look.</p>
+      <span class="go">Compare directions →</span>
+    </a>
+  </div>
+  <p class="foot">Aurora theme · Space Grotesk + Inter · all screens self-contained</p>
+</div>
+</body>
+</html>
