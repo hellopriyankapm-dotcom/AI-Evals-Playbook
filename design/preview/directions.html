@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Evals Playbook — Design Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#E9EAEE;font-family:"Inter",sans-serif;padding:30px 20px 60px}
+  .head{text-align:center;max-width:1500px;margin:0 auto 26px}
+  .head h1{font-family:"Space Grotesk";font-size:26px;color:#15171c}
+  .head p{color:#5c616c;font-size:14px;margin-top:6px}
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1500px;margin:0 auto}
+
+  /* ===== shared panel structure ===== */
+  .panel{border-radius:26px;overflow:hidden;font-family:"Inter",sans-serif;
+    --h:"Space Grotesk";padding:22px;min-height:760px;position:relative}
+  .ptag{font-family:"Space Grotesk";font-weight:700;font-size:11px;letter-spacing:1.5px;
+    text-transform:uppercase;display:inline-block;padding:5px 11px;border-radius:999px;margin-bottom:4px}
+  .pname{font-family:"Space Grotesk";font-weight:700;font-size:19px;margin:8px 0 2px}
+  .pdesc{font-size:12px;opacity:.7;margin-bottom:18px;line-height:1.5}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;font-size:12px;
+    font-weight:600;margin-bottom:16px}
+  .brand{font-family:"Space Grotesk";font-weight:700;font-size:14px;display:flex;align-items:center;gap:7px}
+  .glyph{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px}
+  .pill{padding:4px 10px;border-radius:999px;font-size:11px}
+
+  .hero{border-radius:20px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+  .hero .dno{font-family:"Space Grotesk";font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;opacity:.8}
+  .hero h2{font-family:"Space Grotesk";font-size:25px;font-weight:700;line-height:1.15;margin:8px 0 10px;letter-spacing:-.5px}
+  .hero .meta{font-size:12px;opacity:.75;margin-bottom:16px}
+  .cta{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;
+    padding:12px 18px;border-radius:13px;border:none;cursor:default}
+
+  .trail{display:flex;align-items:center;gap:0;margin:6px 2px 16px}
+  .seg{flex:1;height:3px}
+  .bd{width:26px;height:26px;border-radius:50%;flex:none;display:flex;align-items:center;
+    justify-content:center;font-size:10px;font-weight:700}
+  .rowlabel{display:flex;justify-content:space-between;font-size:10.5px;opacity:.6;margin-bottom:18px;font-weight:600}
+
+  .quote{border-radius:18px;padding:18px;font-family:"Space Grotesk";font-weight:600;
+    font-size:15.5px;line-height:1.4;margin-bottom:16px}
+  .quote .sh{font-family:"Inter";font-weight:600;font-size:11px;display:inline-block;
+    margin-top:12px;padding:5px 11px;border-radius:999px}
+
+  .planbox{border-radius:16px;padding:15px}
+  .planbox .pt{font-size:12px;font-weight:600;margin-bottom:9px;display:flex;justify-content:space-between}
+  .ptrack{height:7px;border-radius:7px;overflow:hidden;margin-bottom:6px}
+  .ptrack i{display:block;height:100%;width:35%}
+  .planbox .sub{font-size:10.5px;opacity:.6}
+
+  /* ========================================================= */
+  /* THEME A — EDITORIAL CALM (light, indigo, premium/minimal)  */
+  /* ========================================================= */
+  .theme-a{background:#F6F7FB;color:#14161c}
+  .theme-a .ptag{background:#E8E8FB;color:#5b5bd6}
+  .theme-a .pname{color:#14161c}
+  .theme-a .glyph{background:#5b5bd6;color:#fff}
+  .theme-a .topbar{color:#5c616c}
+  .theme-a .pill{background:#fff;border:1px solid #e7e8ef;color:#41454f}
+  .theme-a .hero{background:#fff;border:1px solid #ebecf2;box-shadow:0 12px 30px rgba(20,22,40,.06)}
+  .theme-a .hero .dno{color:#5b5bd6}
+  .theme-a .cta{background:#5b5bd6;color:#fff;box-shadow:0 8px 18px rgba(91,91,214,.28)}
+  .theme-a .seg{background:#e7e8ef}.theme-a .seg.on{background:#5b5bd6}
+  .theme-a .bd{background:#f0f1f6;border:2px solid #e0e1ea;color:#9aa0ad}
+  .theme-a .bd.done{background:#5b5bd6;border-color:#5b5bd6;color:#fff}
+  .theme-a .bd.now{background:#fff;border-color:#5b5bd6;color:#5b5bd6;box-shadow:0 0 0 4px #e8e8fb}
+  .theme-a .bd.flag{border-color:#d9a441;color:#d9a441}
+  .theme-a .bd.medal{border-color:#d9a441;color:#d9a441}
+  .theme-a .quote{background:#14161c;color:#fff}
+  .theme-a .quote .sh{background:rgba(255,255,255,.14);color:#fff}
+  .theme-a .planbox{background:#fff;border:1px solid #ebecf2}
+  .theme-a .ptrack{background:#eef0f5}.theme-a .ptrack i{background:#23b07a}
+
+  /* ========================================================= */
+  /* THEME B — AURORA (soft gradient, teal→indigo, friendly)    */
+  /* ========================================================= */
+  .theme-b{background:linear-gradient(165deg,#EAFBF6 0%,#EEF2FF 55%,#F6EEFF 100%);color:#17202e}
+  .theme-b .ptag{background:rgba(20,184,166,.16);color:#0d9488}
+  .theme-b .glyph{background:linear-gradient(135deg,#14b8a6,#6366f1);color:#fff}
+  .theme-b .topbar{color:#4a5568}
+  .theme-b .pill{background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);color:#3a4256;backdrop-filter:blur(6px)}
+  .theme-b .hero{background:rgba(255,255,255,.66);border:1px solid #fff;
+    box-shadow:0 16px 36px rgba(80,90,160,.13);backdrop-filter:blur(10px)}
+  .theme-b .hero .dno{color:#0d9488}
+  .theme-b .cta{background:linear-gradient(135deg,#14b8a6,#6366f1);color:#fff;box-shadow:0 10px 22px rgba(99,102,241,.30)}
+  .theme-b .seg{background:#dbe3f0}.theme-b .seg.on{background:linear-gradient(90deg,#14b8a6,#6366f1)}
+  .theme-b .bd{background:rgba(255,255,255,.8);border:2px solid #dbe3f0;color:#94a0b4}
+  .theme-b .bd.done{background:linear-gradient(135deg,#14b8a6,#5eead4);border-color:transparent;color:#053b34}
+  .theme-b .bd.now{background:#fff;border-color:#6366f1;color:#6366f1;box-shadow:0 0 0 5px rgba(99,102,241,.18)}
+  .theme-b .bd.flag{border-color:#f59e0b;color:#f59e0b}
+  .theme-b .bd.medal{border-color:#f59e0b;color:#f59e0b}
+  .theme-b .quote{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+  .theme-b .quote .sh{background:rgba(255,255,255,.2);color:#fff}
+  .theme-b .planbox{background:rgba(255,255,255,.66);border:1px solid #fff;backdrop-filter:blur(8px)}
+  .theme-b .ptrack{background:#dbe3f0}.theme-b .ptrack i{background:linear-gradient(90deg,#14b8a6,#6366f1)}
+
+  /* ========================================================= */
+  /* THEME C — FOCUS DARK (charcoal, mint glow, premium focus)  */
+  /* ========================================================= */
+  .theme-c{background:radial-gradient(120% 80% at 50% -10%,#16202b 0%,#0d1016 60%);color:#e7ecf3}
+  .theme-c .ptag{background:rgba(52,211,153,.14);color:#34d399}
+  .theme-c .pname{color:#f3f6fa}
+  .theme-c .glyph{background:#34d399;color:#06231a}
+  .theme-c .topbar{color:#8b96a6}
+  .theme-c .pill{background:#161c25;border:1px solid #232b37;color:#aeb8c6}
+  .theme-c .hero{background:#141a22;border:1px solid #222b37;box-shadow:0 16px 40px rgba(0,0,0,.4)}
+  .theme-c .hero .dno{color:#34d399}
+  .theme-c .cta{background:#34d399;color:#06231a;box-shadow:0 10px 24px rgba(52,211,153,.28)}
+  .theme-c .seg{background:#222b37}.theme-c .seg.on{background:#34d399}
+  .theme-c .bd{background:#161c25;border:2px solid #2a3340;color:#727d8d}
+  .theme-c .bd.done{background:#34d399;border-color:#34d399;color:#06231a}
+  .theme-c .bd.now{background:#0d1016;border-color:#34d399;color:#34d399;box-shadow:0 0 0 5px rgba(52,211,153,.16)}
+  .theme-c .bd.flag{border-color:#fbbf24;color:#fbbf24}
+  .theme-c .bd.medal{border-color:#fbbf24;color:#fbbf24}
+  .theme-c .quote{background:#101620;border:1px solid #222b37;color:#eaf6f0}
+  .theme-c .quote .sh{background:rgba(52,211,153,.16);color:#34d399}
+  .theme-c .planbox{background:#141a22;border:1px solid #222b37}
+  .theme-c .ptrack{background:#222b37}.theme-c .ptrack i{background:#34d399}
+</style></head>
+<body>
+  <div class="head">
+    <h1>The AI Evals Playbook — three modern directions</h1>
+    <p>Same screen, three calm-but-motivating moods. All move away from the couch-to-5k warm look. Pick one (or mix) — then I build the full 10-day clickable mockup in it.</p>
+  </div>
+  <div class="cols" id="cols"></div>
+
+<script>
+  const panel = (cls, tag, name, desc) => `
+  <div class="panel ${cls}">
+    <span class="ptag">${tag}</span>
+    <div class="pname">${name}</div>
+    <div class="pdesc">${desc}</div>
+    <div class="topbar">
+      <span class="brand"><span class="glyph">◇</span> Evals Playbook</span>
+      <span class="pill">🔥 3 · 30%</span>
+    </div>
+    <div class="hero">
+      <div class="dno">Day 4 of 10</div>
+      <h2>From notes to failure modes</h2>
+      <div class="meta">≈12 min read · 1 hands-on exercise</div>
+      <button class="cta">Start Day 4 →</button>
+    </div>
+    <div class="trail">
+      <div class="bd done">✓</div><div class="seg on"></div>
+      <div class="bd done">✓</div><div class="seg on"></div>
+      <div class="bd done">✓</div><div class="seg on"></div>
+      <div class="bd now">4</div><div class="seg"></div>
+      <div class="bd flag">⚑</div><div class="seg"></div>
+      <div class="bd">6</div><div class="seg"></div>
+      <div class="bd">7</div><div class="seg"></div>
+      <div class="bd">8</div><div class="seg"></div>
+      <div class="bd">9</div><div class="seg"></div>
+      <div class="bd medal">★</div>
+    </div>
+    <div class="rowlabel"><span>Start</span><span>Halfway ⚑</span><span>Finish ★</span></div>
+    <div class="quote">"The AI makes mistakes" is a shrug. "It fabricates policies 30% of the time" is a roadmap.
+      <span class="sh">↗ Share</span></div>
+    <div class="planbox">
+      <div class="pt"><span>My Eval Plan — Support assistant</span><span>4 / 10</span></div>
+      <div class="ptrack"><i></i></div>
+      <div class="sub">your take-home deliverable, filling up as you go</div>
+    </div>
+  </div>`;
+  document.getElementById('cols').innerHTML =
+    panel('theme-a','Direction A','Editorial Calm',
+      'Light, airy, premium. Cool off-white, deep ink, one focused indigo accent. Feels like a modern product tool (Linear/Notion). Calm via restraint and whitespace.') +
+    panel('theme-b','Direction B','Aurora',
+      'Soft multi-tone gradient, glassy cards, teal→indigo accent. Friendly and uplifting but still gentle. Motivating through light and color, not noise.') +
+    panel('theme-c','Direction C','Focus Dark',
+      'Calm charcoal "focus mode" with a luminous mint accent. Premium, low-strain, immersive. Motivating through clarity and glow.');
+</script>
+</body></html>
