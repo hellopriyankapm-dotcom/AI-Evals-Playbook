@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The AI Evals Playbook — a free 10-day course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F6FB; --bg-2:#ECEEF7; --card:#FFFFFF; --ink:#13151c; --ink-2:#3b3f4c;
+  --muted:#71768a; --line:#E7E9F2; --line-2:#dfe2ee;
+  --primary:#5B5BD6; --primary-d:#4a48c4; --primary-soft:#ECECFB; --primary-tint:#F3F3FE;
+  --done:#1fa97a; --done-soft:#E3F4EE; --flag:#E0A23A; --flag-soft:#FBEFD8;
+  --aurora:linear-gradient(135deg,#6366F1 0%,#7C8CF8 40%,#22B8A6 100%);
+  --aurora-soft:linear-gradient(135deg,#EEF0FF 0%,#EDF7F4 100%);
+  --shadow:0 14px 38px rgba(30,30,70,.08); --shadow-s:0 6px 18px rgba(30,30,70,.06);
+  --serif:"Space Grotesk",sans-serif; --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+.h{font-family:var(--serif);letter-spacing:-.4px;line-height:1.15}
+.muted{color:var(--muted)} .sm{font-size:13px} .center{text-align:center}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+.hidden{display:none!important}
+
+/* ---------- top app bar ---------- */
+.appbar{position:sticky;top:0;z-index:40;background:rgba(245,246,251,.82);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);}
+.appbar .in{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:12px 18px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-weight:700;font-size:15px;cursor:pointer}
+.brand .mk{width:26px;height:26px;border-radius:8px;background:var(--aurora);display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:13px}
+.appbar .spacer{flex:1}
+.prog-mini{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--muted)}
+.prog-mini .track{width:74px;height:6px;background:var(--bg-2);border-radius:6px;overflow:hidden}
+.prog-mini .track i{display:block;height:100%;width:0;background:var(--primary);transition:width .4s}
+.streak{font-size:12px;font-weight:600;color:var(--flag)}
+.gloss-btn{font-size:12px;font-weight:600;color:var(--primary);background:var(--primary-soft);
+  padding:6px 11px;border-radius:999px}
+
+/* ---------- layout ---------- */
+.view{max-width:920px;margin:0 auto;padding:26px 18px 90px;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:15px;
+  padding:14px 22px;border-radius:13px;background:var(--primary);color:#fff;box-shadow:0 8px 18px rgba(91,91,214,.26);
+  transition:.15s}
+.btn:hover{background:var(--primary-d);transform:translateY(-1px)}
+.btn.full{display:flex;width:100%}
+.btn.ghost{background:transparent;color:var(--muted);box-shadow:none;border:1px solid var(--line-2)}
+.btn.ghost:hover{background:var(--card);color:var(--ink)}
+.btn.sm{padding:9px 15px;font-size:13px}
+
+/* ---------- landing ---------- */
+.hero{background:var(--aurora-soft);border:1px solid var(--line);border-radius:26px;padding:44px 30px;text-align:center;
+  position:relative;overflow:hidden}
+.hero .tag{display:inline-block;background:#fff;border:1px solid var(--line);color:var(--primary);font-weight:600;
+  font-size:12px;padding:5px 13px;border-radius:999px;margin-bottom:18px}
+.hero h1{font-size:40px;font-weight:700;margin-bottom:14px}
+.hero h1 .grad{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:17px;color:var(--ink-2);max-width:560px;margin:0 auto 10px}
+.hero p.aud{font-size:13.5px;color:var(--muted);max-width:520px;margin:0 auto 26px}
+.hero .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.facts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.fact{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 14px;font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.fact b{color:var(--primary)}
+.sectitle{font-family:var(--serif);font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);margin:36px 4px 14px}
+.lifecycle{display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:16px;justify-content:center}
+.lc{font-size:12.5px;font-weight:600;color:var(--ink-2);background:var(--bg);padding:7px 12px;border-radius:9px}
+.lc .d{color:var(--muted);font-weight:500}
+.arr{color:var(--line-2);font-weight:700}
+.artifact-card{display:flex;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:18px;margin-top:14px;box-shadow:var(--shadow-s)}
+.artifact-card .doc{width:88px;height:108px;border-radius:10px;background:var(--primary-tint);border:1px solid var(--line-2);
+  padding:10px;flex:none}
+.artifact-card .doc .l{height:6px;border-radius:4px;background:#fff;margin:5px 0}
+.artifact-card .doc .l.dn{background:var(--done-soft)}
+.artifact-card h4{font-family:var(--serif);font-size:16px;margin-bottom:4px}
+
+/* ---------- trail ---------- */
+.trail-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px}
+.trail-head h2{font-size:25px;font-weight:700}
+.trail{position:relative}
+.trail::before{content:"";position:absolute;left:23px;top:18px;bottom:18px;width:2px;background:var(--line-2)}
+.tnode{display:flex;align-items:center;gap:16px;padding:8px 0;position:relative;cursor:pointer}
+.tnode .bead{width:46px;height:46px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-weight:700;font-size:15px;background:var(--card);border:2px solid var(--line-2);
+  color:var(--muted);z-index:1;transition:.15s}
+.tnode:hover .bead{border-color:var(--primary)}
+.tnode.done .bead{background:var(--done);border-color:var(--done);color:#fff}
+.tnode.today .bead{background:#fff;border-color:var(--primary);color:var(--primary);box-shadow:0 0 0 6px var(--primary-soft)}
+.tnode.flag .bead{border-color:var(--flag);color:var(--flag)}
+.tnode.medal .bead{border-color:var(--flag);color:var(--flag)}
+.tcard{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px;
+  display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-s);transition:.15s}
+.tnode:hover .tcard{transform:translateX(3px);border-color:var(--line-2)}
+.tnode.today .tcard{border-color:var(--primary);background:var(--primary-tint)}
+.tcard .dlabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px}
+.tnode.today .tcard .dlabel{color:var(--primary)}
+.tcard .ttitle{font-family:var(--serif);font-weight:600;font-size:15px;line-height:1.2}
+.tcard .chip{margin-left:auto;font-size:10px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap}
+.chip.today{background:var(--primary);color:#fff}.chip.flag{background:var(--flag-soft);color:var(--flag)}
+.chip.medal{background:var(--flag-soft);color:var(--flag)}.chip.done{background:var(--done-soft);color:var(--done)}
+
+/* ---------- day lesson ---------- */
+.crumbs{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px}
+.crumbs a{color:var(--muted)}
+.daytop .kick{font-family:var(--serif);font-weight:600;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--primary)}
+.daytop h1{font-size:31px;font-weight:700;margin:7px 0 8px;line-height:1.12}
+.daytop .meta{font-size:13px;color:var(--muted);margin-bottom:20px}
+.scene{background:var(--bg-2);border-radius:16px;padding:18px 20px;font-size:15.5px;color:var(--ink-2);margin-bottom:22px}
+.lblock h3{font-family:var(--serif);font-size:19px;font-weight:600;margin:26px 0 8px}
+.lblock p{margin:10px 0;color:var(--ink-2);font-size:15.5px}
+.lblock ul{margin:10px 0 10px 4px;list-style:none}
+.lblock li{position:relative;padding-left:22px;margin:7px 0;color:var(--ink-2);font-size:15px}
+.lblock li::before{content:"";position:absolute;left:4px;top:10px;width:7px;height:7px;border-radius:50%;background:var(--primary)}
+.term{color:var(--primary);border-bottom:1px dashed var(--primary);cursor:pointer;font-weight:500}
+.example{background:var(--primary-tint);border:1px solid var(--line-2);border-radius:16px;padding:18px 20px;margin:22px 0}
+.example .x{font-family:var(--serif);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--primary);margin-bottom:8px}
+.example p{font-size:14.5px;color:var(--ink-2);margin:6px 0}
+.example table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.example th,.example td{border:1px solid var(--line-2);padding:7px 9px;text-align:left;background:#fff}
+.example th{background:#fff;font-size:11px;color:var(--muted);font-weight:600}
+.pull{background:var(--ink);color:#fff;border-radius:20px;padding:26px;margin:26px 0;position:relative}
+.pull .q{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.35}
+.pull .share{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:12px;font-weight:600;color:#fff;
+  background:rgba(255,255,255,.14);padding:7px 13px;border-radius:999px}
+.tomorrow{font-size:14px;color:var(--muted);margin:8px 2px 22px}.tomorrow b{color:var(--ink)}
+
+/* exercise */
+.exercise{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow-s);margin-top:8px}
+.exercise .eh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.exercise .eh .min{font-size:11px;font-weight:700;color:var(--done);background:var(--done-soft);padding:3px 9px;border-radius:999px}
+.exercise h3{font-family:var(--serif);font-size:18px;font-weight:600}
+.exercise p.ed{color:var(--muted);font-size:14px;margin:4px 0 14px}
+.exercise label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin:14px 0 6px}
+.exercise input,.exercise textarea{width:100%;border:1px solid var(--line-2);border-radius:11px;padding:11px 13px;
+  font-family:inherit;font-size:14px;background:var(--bg);color:var(--ink);resize:vertical}
+.exercise input:focus,.exercise textarea:focus{outline:none;border-color:var(--primary);background:#fff}
+.exercise .tip{background:var(--done-soft);border-radius:11px;padding:11px 13px;font-size:13px;color:#1c6b50;margin:16px 0 6px}
+.daynav{display:flex;gap:10px;margin-top:22px}
+.daynav .btn{flex:1}
+
+/* plan */
+.plan-prog{height:9px;background:var(--bg-2);border-radius:9px;overflow:hidden;margin:8px 0 22px}
+.plan-prog i{display:block;height:100%;width:0;background:var(--done);transition:width .5s}
+.planlist{display:flex;flex-direction:column;gap:0}
+.pitem{display:flex;align-items:center;gap:13px;padding:14px 4px;border-bottom:1px solid var(--line)}
+.pitem .s{width:24px;height:24px;border-radius:50%;border:2px solid var(--line-2);flex:none;display:flex;
+  align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted)}
+.pitem.done .s{background:var(--done);border-color:var(--done);color:#fff}
+.pitem .pt{font-size:14.5px;font-weight:500}
+.pitem .pd{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
+.exportbar{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+
+/* glossary drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,20,40,.34);backdrop-filter:blur(2px);z-index:50;opacity:0;
+  pointer-events:none;transition:.2s}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(390px,90vw);background:var(--card);z-index:60;
+  box-shadow:-20px 0 50px rgba(20,20,40,.18);transform:translateX(100%);transition:.26s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer .dh{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+.drawer .dh h3{font-family:var(--serif);font-size:17px}
+.drawer .close{font-size:20px;color:var(--muted);width:32px;height:32px}
+.drawer .search{margin:14px 20px}
+.drawer .search input{width:100%;border:1px solid var(--line-2);border-radius:11px;padding:10px 13px;font-family:inherit;font-size:14px;background:var(--bg)}
+.glist{overflow-y:auto;padding:0 20px 30px}
+.gterm{padding:14px 0;border-bottom:1px solid var(--line)}
+.gterm .t{font-family:var(--serif);font-weight:600;font-size:14.5px;color:var(--ink)}
+.gterm.hot .t{color:var(--primary)}
+.gterm .d{font-size:13.5px;color:var(--ink-2);margin-top:4px}
+
+/* modal */
+.modal-scrim{position:fixed;inset:0;background:rgba(20,20,40,.5);z-index:70;display:flex;align-items:center;
+  justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.2s}
+.modal-scrim.open{opacity:1;pointer-events:auto}
+.modal{background:var(--card);border-radius:24px;max-width:380px;width:100%;padding:32px 26px;text-align:center;
+  transform:scale(.94);transition:.22s}
+.modal-scrim.open .modal{transform:none}
+.modal .big{font-size:46px;margin-bottom:6px}
+.modal h2{font-family:var(--serif);font-size:24px;font-weight:700;margin-bottom:8px}
+.modal p{color:var(--ink-2);font-size:14.5px;margin-bottom:18px}
+.sharecard{background:var(--aurora);color:#fff;border-radius:16px;padding:20px;text-align:left;font-family:var(--serif);
+  font-weight:600;font-size:15px;line-height:1.35;margin-bottom:18px}
+.sharecard small{font-family:var(--sans);font-weight:600;opacity:.85;font-size:10.5px;letter-spacing:1px;
+  text-transform:uppercase;display:block;margin-bottom:8px}
+.modal .row{display:flex;gap:10px}.modal .row .btn{flex:1}
+
+/* footer */
+.foot{border-top:1px solid var(--line);background:var(--card);padding:26px 18px;text-align:center;color:var(--muted);font-size:12.5px;line-height:1.8}
+.foot a{color:var(--primary)}
+
+@media(max-width:560px){
+  .hero{padding:34px 20px}.hero h1{font-size:31px}.lifecycle{font-size:11px}
+  .view{padding:20px 14px 80px}.prog-mini .track{width:54px}
+}
+</style>
+</head>
+<body>
+
+<!-- APP BAR -->
+<div class="appbar">
+  <div class="in">
+    <div class="brand" onclick="go('home')"><span class="mk">◇</span> AI Evals Playbook</div>
+    <div class="spacer"></div>
+    <span class="streak" id="streak">🔥 0</span>
+    <div class="prog-mini"><div class="track"><i id="progbar"></i></div><span id="progtxt">0/10</span></div>
+    <button class="gloss-btn" onclick="openGloss()">Glossary</button>
+  </div>
+</div>
+
+<div id="app"></div>
+
+<!-- GLOSSARY DRAWER -->
+<div class="scrim" id="scrim" onclick="closeGloss()"></div>
+<div class="drawer" id="drawer">
+  <div class="dh"><h3>Glossary</h3><button class="close" onclick="closeGloss()">✕</button></div>
+  <div class="search"><input id="gsearch" placeholder="Search any term…" oninput="renderGloss(this.value)"></div>
+  <div class="glist" id="glist"></div>
+</div>
+
+<!-- MILESTONE MODAL -->
+<div class="modal-scrim" id="modalScrim">
+  <div class="modal" id="modalBody"></div>
+</div>
+
+<div class="foot">
+  A free resource · <b>The AI Evals Playbook</b> by Priyanka Das · The Outcome Memo<br>
+  Concepts credited to Hamel Husain &amp; Shreya Shankar and the AI-evals community. No coding required.
+</div>
+
+<script>
+/* ============================ DATA ============================ */
+const GLOSS = [
+  ["Eval","A repeatable, systematic way to measure whether your AI's output is good — not a gut check."],
+  ["Vibe-check","Judging AI quality by eyeballing a few outputs. Fine for a demo, dangerous as a quality bar."],
+  ["Trace","One real record of your AI doing its job: the input, any steps, and the output."],
+  ["The Three Gulfs","A map of where AI breaks: Comprehension (you ↔ your data), Specification (you ↔ the prompt), Generalization (a few examples ↔ the messy real world). Credited to Shreya Shankar."],
+  ["Open coding","Step 1 of error analysis: read each output and write a short freeform note — no preset categories."],
+  ["Axial coding","Step 2 of error analysis: group your freeform notes into a few named, recurring themes."],
+  ["Failure mode","A named, recurring way your AI gets things wrong (e.g. 'fabricates a policy')."],
+  ["Rubric","The written rule that decides pass vs fail for one thing you care about."],
+  ["Binary eval","A pass/fail rubric instead of a fuzzy 1–10 score. Clearer, more repeatable, more actionable."],
+  ["Eval dataset","A set of test inputs you run your AI on to measure quality. Can start with 3; grows over time."],
+  ["Code evaluator","A simple deterministic rule that checks something objective (a disclaimer is present, a hand-off fired)."],
+  ["LLM-as-judge","Using an AI to grade subjective qualities (tone, helpfulness) the way a human reviewer would."],
+  ["Ground truth","The correct labels, decided by a human — what you check an automated grader against."],
+  ["Precision","Of the failures your grader flagged, what % were real? Low precision = it cries wolf."],
+  ["Recall","Of all the real failures, what % did your grader catch? Low recall = silent misses."],
+  ["RAG","When your AI 'looks things up' before answering. Extra check: did it retrieve the right info?"],
+  ["Agent / trajectory","When your AI takes steps/uses tools. Extra check: did it follow a sensible path, not just land an answer?"],
+  ["Drift","When AI quality quietly changes over time — world changes, usage changes, or the model is updated."],
+  ["Quality gate","An automatic check before a change ships that blocks it if eval scores drop. You ask for it; you don't build it."],
+];
+
+const DAYS = [
+ {n:1,kick:"Mindset",title:"Stop vibe-checking your AI",meta:"≈12 min read · 1 exercise",
+  why:"what an eval actually is, and the baseline you'll measure everything against",
+  scene:"A PM ships an AI assistant, types three questions, gets three good answers, and says 'quality looks great.' Six weeks later support is drowning in fabricated answers — and nobody can say how good the AI ever was. There were never numbers. There was a vibe.",
+  blocks:`<h3>An eval is systematic measurement of quality</h3>
+   <p>An <span class="term" data-t="Eval">eval</span> is a repeatable way to measure whether your AI's output is good — one that gives the same answer no matter who runs it, and that you can defend to other people. The opposite is the <span class="term" data-t="Vibe-check">vibe-check</span>: open it, try a few things, decide it's fine.</p>
+   <p>The vibe-check isn't evil — it's how everyone starts. The problem: it doesn't scale, it misses slow decline, and you can't hand it to anyone else. Your AI handles thousands of inputs; you looked at three.</p>
+   <h3>Why it's the PM's job now</h3>
+   <p>In classic software, 'good' was a spec ('the button turns blue'). With AI, 'good' is a <i>judgment</i> — tone, correctness, safety — and someone has to own it, write it down, and defend it. That someone is you. You work at the <b>application layer</b>: wiring an existing model into your specific feature. There's no public benchmark for 'our support assistant.' You define what good means.</p>`,
+  example:`<p><b>Vibe-check:</b> "Tried it, seems helpful."</p><p><b>Eval mindset:</b> "'Good' means (a) every policy stated is our real policy, (b) tone is calm and professional, (c) angry or legal cases route to a human. I'll measure each against real outputs."</p><p>Same feature — one you can improve and defend, one that's a feeling.</p>`,
+  quote:"A vibe-check is what you do before you have an eval. An eval is what you show the CEO.",
+  tomorrow:"Before you can fix what's breaking, you need a map of <b>where</b> AI breaks. There are exactly three places.",
+  ex:{title:"Name your feature + baseline",min:"10 min",desc:"This is the feature you'll use for all 10 days.",
+   fields:[["The AI feature I'll evaluate","input","e.g. Refund answers in our support assistant"],
+           ["What it's supposed to do (one sentence)","input",""],
+           ["How I judge 'good' today (my honest vibe-check)","textarea",""],
+           ["One real failure I've already seen","textarea",""]],
+   tip:"No feature at work? Use any AI product you can poke at — a chatbot, a writing tool, a search assistant."}},
+
+ {n:2,kick:"The map",title:"The three places AI breaks",meta:"≈12 min read · 1 exercise",
+  why:"a simple map that tells you where to look when your AI disappoints",
+  scene:"Your assistant gave a bad answer. Why? Maybe you never realized customers paste whole email threads. Maybe your prompt never said 'only state real policies.' Maybe it works on 10 examples but not the 500 weird ways real people ask. Three different problems, three different fixes.",
+  blocks:`<h3>The Three Gulfs</h3>
+   <p><span class="term" data-t="The Three Gulfs">Shreya Shankar's framework</span> names the three gaps where AI applications go wrong:</p>
+   <ul><li><b>Comprehension</b> — you ↔ your data. You don't actually know what your real inputs look like. <i>You can't evaluate what you've never seen.</i></li>
+   <li><b>Specification</b> — you ↔ the prompt. The gap between what you meant and what you actually told the AI. Most 'the AI is dumb' moments are really vague instructions.</li>
+   <li><b>Generalization</b> — a few examples ↔ the messy real world. It nails your demo, then quietly fails on the long tail.</li></ul>
+   <h3>Why the map matters</h3>
+   <p>When something breaks, ask <b>which gulf is this?</b> Comprehension → go read more data. Specification → fix the instructions. Generalization → expand your test set to the messy cases. You stop saying 'the AI is broken' (useless) and start saying 'this is a specification gap' (actionable).</p>`,
+  example:`<p>Assistant invents a "30-day refund window."</p><p><b>Specification?</b> Almost certainly — the prompt never said "only state approved policies; if unsure, say you'll check." <b>Generalization?</b> Also — it behaves on common questions, breaks on rare ones. Most failures touch more than one gulf. That's fine; you now have three sharp questions instead of one vague complaint.</p>`,
+  quote:"\"The AI is broken\" tells you nothing. \"This is a specification gulf\" tells you what to do next.",
+  tomorrow:"The single highest-leverage skill in all of evals — and the one almost everyone skips: actually looking at your data.",
+  ex:{title:"Map your failures to a Gulf",min:"10 min",desc:"First instinct is usually right.",
+   fields:[["Failure 1 → which Gulf + why","textarea",""],
+           ["Failure 2 → which Gulf + why","textarea",""],
+           ["My biggest Gulf right now","input",""]],
+   tip:"You'll refine these once you read your real data tomorrow."}},
+
+ {n:3,kick:"The core skill",title:"Look at your data",meta:"≈12 min read · 1 exercise",
+  why:"the one habit that separates people who are good at evals from everyone else",
+  scene:"A team spent two weeks arguing about which eval tool to buy. The actual problem — the assistant mishandles anything mentioning 'chargeback' — was sitting in the first ten real conversations. Nobody had read them.",
+  blocks:`<h3>Read the traces, write what you see</h3>
+   <p>A <span class="term" data-t="Trace">trace</span> is one real record of your AI doing its job. <b>Error analysis</b> is reading a batch of them and noticing what's really happening. Today is step one: <span class="term" data-t="Open coding">open coding</span> — read and react, no preset categories.</p>
+   <ul><li>Pull <b>15–20 real outputs</b> — real ones, not the three demo cases.</li>
+   <li>Read each fully. Write <b>one short, plain note</b>: what went well, what went wrong, anything surprising.</li>
+   <li>Be specific: not "bad answer" but "claimed a 30-day window we don't offer."</li>
+   <li>Don't fix or categorize yet. Just see clearly.</li></ul>
+   <p>It feels too simple to be powerful. It's the opposite. It surfaces failures you'd never have guessed, and it's the only way to know what to measure. Put it in a spreadsheet: <i>input · output · note</i>. Read the scary ones — angry users, weird inputs. The boring traces teach you nothing.</p>`,
+  example:`<table><tr><th>input</th><th>output</th><th>note</th></tr>
+   <tr><td>refund after 3 weeks?</td><td>"Yes! You have 30 days."</td><td>❌ invented a 30-day policy</td></tr>
+   <tr><td>"REFUND or I call my lawyer"</td><td>"Sorry to hear, our policy is…"</td><td>❌ legal threat, didn't escalate</td></tr>
+   <tr><td>"comment ça marche?"</td><td>answers in English</td><td>⚠️ wrong language</td></tr>
+   <tr><td>[40-line pasted thread]</td><td>"Can you clarify?"</td><td>⚠️ choked on messy input</td></tr></table>
+   <p>Four rows — and you already see four real problems the dashboard never showed.</p>`,
+  quote:"You cannot evaluate what you have not read. Looking at your data isn't the prerequisite to the work — it is the work.",
+  tomorrow:"You've got a pile of notes. Now we turn it into a short, ranked list of named failure modes.",
+  ex:{title:"Read 15–20 real outputs",min:"15 min",desc:"The most important exercise of the week.",
+   fields:[["Paste / summarize your per-output notes here","textarea","Output 1 → …\nOutput 2 → …"]],
+   tip:"Deliberately include the messy, angry, and weird ones. Resist the urge to fix or categorize — just see."}},
+
+ {n:4,kick:"The core skill",title:"From notes to failure modes",meta:"≈12 min read · 1 exercise",
+  why:"turn the messy pile into a short, ranked list of what's actually breaking",
+  scene:"You've got 20 notes. They feel like noise. But 'invented 30-day policy,' 'made up a return address,' 'guessed a discount' are the same problem in three outfits: the assistant fabricates policies. Name it once and you can count it, measure it, fix it.",
+  blocks:`<h3>Cluster, name, and count</h3>
+   <p><span class="term" data-t="Axial coding">Axial coding</span>: group notes that are really the same problem. Each group becomes a <span class="term" data-t="Failure mode">failure mode</span>.</p>
+   <ul><li><b>Name</b> each as a behavior, not a vibe. Good: "Fabricates a policy that doesn't exist." Weak: "Accuracy issues."</li>
+   <li><b>Count</b> how often each appeared. <b>Rank</b> by frequency × severity.</li>
+   <li>You'll land on <b>3–6</b> failure modes. That's the sweet spot.</li></ul>
+   <h3>The Pareto move</h3>
+   <p>A couple of failure modes cause most of your pain. Fix the top one or two first, ship, re-measure. A 2%-but-legal-liability failure beats a 30%-but-cosmetic one — rank by <b>how often × how badly it hurts</b>.</p>
+   <p>You can paste your notes into Claude and ask it to group them into 3–6 modes — then <b>edit</b>. You own the final list; the AI is a fast sorter, not the judge.</p>`,
+  example:`<table><tr><th>#</th><th>Failure mode</th><th>/20</th><th>Sev</th></tr>
+   <tr><td>1</td><td>Fabricates a non-existent policy</td><td>6</td><td>High 🔥</td></tr>
+   <tr><td>2</td><td>Fails to escalate legal/angry cases</td><td>3</td><td>High 🔥</td></tr>
+   <tr><td>3</td><td>Answers in the wrong language</td><td>2</td><td>Med</td></tr>
+   <tr><td>4</td><td>Chokes on long/messy input</td><td>2</td><td>Low</td></tr></table>
+   <p>Now you have a plan, not a feeling. #1 is your target tomorrow.</p>`,
+  quote:"\"The AI makes mistakes\" is a shrug. \"It fabricates policies 30% of the time\" is a roadmap.",
+  tomorrow:"You've named the enemy. Now turn your #1 failure mode into a measurement you can trust.",
+  ex:{title:"Name your top failure modes",min:"12 min",desc:"By hand, or have an AI draft it and you edit.",
+   fields:[["My 3–6 failure modes (name · count · severity)","textarea","1. …\n2. …\n3. …"],
+           ["My #1 failure mode to fix first","input",""]],
+   tip:"If a mode is too vague to count, it's too vague to measure. Sharpen it into a behavior."}},
+
+ {n:5,kick:"Measure",title:"Turn \"good\" into a measure",meta:"≈12 min read · 1 exercise",milestone:"halfway",
+  why:"write a rubric a colleague agrees with, build a tiny test set, learn the eval loop",
+  scene:"Two teammates rate the same answer 7/10 and 4/10 and argue for ten minutes. '7/10' means nothing. Now the rubric is: 'FAIL if it states any policy not on our approved list.' Both look, both say FAIL. No argument.",
+  blocks:`<h3>Write binary (pass/fail) rubrics</h3>
+   <p>A <span class="term" data-t="Rubric">rubric</span> decides pass vs fail for one thing. The most useful tip in this course: <b>make it binary, not 1–10.</b></p>
+   <ul><li>1–10 scores are fake precision — nobody reliably tells a 6 from a 7.</li>
+   <li><span class="term" data-t="Binary eval">Binary</span> forces a clear definition of failure (the valuable thinking) and is actionable: "30% fail this check" tells you exactly what to fix.</li></ul>
+   <p>Good rubrics are specific enough that two people grade the same. Write one per failure mode; start with your #1.</p>
+   <h3>Build a small test set</h3>
+   <p>An <span class="term" data-t="Eval dataset">eval dataset</span> is inputs you run your AI on. <b>Start tiny</b> — 3 is legitimate, 10 is great. Build it by hand (your Day-3 traces are gold) or <b>AI-generated</b> ("generate 30 diverse refund questions, including angry and non-English ones"). Cover the hard cases on purpose.</p>
+   <p>The whole loop: <b>draft prompt → test set → run → grade → change &amp; repeat.</b> The score becomes an objective baseline — change the prompt, re-run, see if you helped. A spreadsheet is a real eval tool.</p>`,
+  example:`<p><b>Rubric:</b> "PASS if every policy mentioned is on our approved list (or it says it'll check). FAIL otherwise."</p><p><b>Test set:</b> 6 real questions from Day 3 + 4 AI-generated edge cases. Run, mark pass/fail → 6/10. That 60% is your baseline. Hit 9/10 next week and you'll <i>know</i> you improved it.</p>`,
+  quote:"A 1–10 score is an opinion with a number taped on. A binary rubric is a decision anyone can repeat.",
+  tomorrow:"Grading 10 by hand is fine. Grading 10,000 isn't. Next: the two kinds of automatic graders.",
+  ex:{title:"Write a rubric + 10 test cases",min:"15 min",desc:"For your #1 failure mode.",
+   fields:[["Binary pass/fail rubric for failure mode #1","textarea","FAIL if … . PASS otherwise."],
+           ["My ~10 test cases (some real, some AI-generated)","textarea","1. …\n2. …"]],
+   tip:"Test the rubric on real examples — if you and a teammate disagree, it's too vague. Sharpen it."}},
+
+ {n:6,kick:"Validate",title:"Two kinds of graders",meta:"≈12 min read · 1 exercise",
+  why:"how grading gets automated — and the rule for which tool fits which job",
+  scene:"Hand-grading 10 cases is fine. But your AI handles thousands of real interactions. To measure quality at that scale, the grading has to run by itself. There are exactly two ways — the skill is knowing which each failure mode needs.",
+  blocks:`<h3>Code evaluators — for objective things</h3>
+   <p>A <span class="term" data-t="Code evaluator">code evaluator</span> is a deterministic rule with a clear yes/no answer. <b>Example:</b> any answer quoting a refund amount must include "final amounts are confirmed by our team" — a code check confirms that line is present. It's there or it isn't.</p>
+   <ul><li>✅ Fast, basically free, never misses what it's told to check.</li><li>⚠️ Only catches what you program. Can't judge "was this helpful?"</li></ul>
+   <h3>LLM-as-judge — for judgment</h3>
+   <p>An <span class="term" data-t="LLM-as-judge">LLM-as-judge</span> uses an AI to grade subjective qualities — tone, helpfulness, policy adherence — much closer to how a person would mark it.</p>
+   <ul><li>✅ Flexible, catches nuance, scales to thousands.</li><li>⚠️ It's an AI grading an AI — you must verify it agrees with humans first (tomorrow).</li></ul>
+   <p>You use <b>both, on different checks</b>. The rule: <b>objective &amp; rule-shaped → code; subjective &amp; judgment-shaped → LLM-judge.</b> An LLM-judge is just a clear prompt: state the one thing to judge, give the rule, ask for PASS/FAIL + a reason.</p>`,
+  example:`<table><tr><th>Failure mode</th><th>Grader</th><th>Why</th></tr>
+   <tr><td>Fabricates a policy</td><td>LLM-judge</td><td>compare claims to policy in meaning</td></tr>
+   <tr><td>Fails to escalate</td><td>Code eval</td><td>did the hand-off fire? yes/no</td></tr>
+   <tr><td>Wrong language</td><td>Code eval</td><td>detect input vs output language</td></tr>
+   <tr><td>Robotic tone</td><td>LLM-judge</td><td>pure judgment call</td></tr></table>`,
+  quote:"Code evals check what must always be true. LLM-judges check what a thoughtful human would notice. You need both.",
+  tomorrow:"An AI grading your AI sounds like asking the fox about the henhouse. Does your judge actually agree with humans?",
+  ex:{title:"Choose a grader per failure mode",min:"12 min",desc:"Then draft one LLM-judge prompt.",
+   fields:[["Grader per failure mode (code / LLM-judge + why)","textarea","1. … → …\n2. … → …"],
+           ["Draft LLM-judge prompt for one subjective mode","textarea","You are grading a reply. RULE: … Answer PASS or FAIL, then one sentence why."]],
+   tip:"Compliance/routing/format checks → code. 'Read it and judge' checks → LLM-judge."}},
+
+ {n:7,kick:"Validate",title:"Can you trust your judge?",meta:"≈12 min read · 1 exercise",
+  why:"the check that turns your judge from 'probably fine' into 'proven trustworthy'",
+  scene:"Your LLM-judge says your assistant fails 8% of the time. But can you trust the judge? Maybe it's missing half the real failures, or flagging good answers. If your measuring tape is wrong, every number you report is wrong.",
+  blocks:`<h3>Validate against ground truth</h3>
+   <p><span class="term" data-t="Ground truth">Ground truth</span> = correct labels, decided by a human (you). Grade ~20 outputs by hand, have your judge grade the same 20, and compare. Two numbers describe how good your judge is:</p>
+   <ul><li><span class="term" data-t="Precision">Precision</span> — of the failures it <b>flagged</b>, what % were real? Low precision = cries wolf.</li>
+   <li><span class="term" data-t="Recall">Recall</span> — of all the <b>real</b> failures, what % did it <b>catch</b>? Low recall = silent misses (the dangerous one — dashboard says 97% while customers hit failures it never saw).</li></ul>
+   <p>You want both high: catch the real failures without crying wolf. When a judge agrees with humans on both, it's effectively a trusted reviewer you've cloned — grading thousands of outputs while you sleep.</p>
+   <p>Bad first try? Normal. Sharpen the rubric in the judge prompt, add a few pass/fail examples, re-test against your 20. Only then turn it loose at scale.</p>`,
+  example:`<p>You hand-label 20: <b>5 real fabrications</b>, 15 clean. Your judge flags 6.</p>
+   <p>Of its 6 flags, 4 were real → <b>precision 4/6 = 67%</b>. Of 5 real, it caught 4 → <b>recall 4/5 = 80%</b>. Recall's decent, precision's shaky. Add two examples to the judge prompt, tighten the rule, re-run → precision 90%+. Now you trust it.</p>`,
+  quote:"An unvalidated judge isn't a measurement — it's a guess with a confidence problem.",
+  tomorrow:"Everything so far assumes 'question in, answer out.' What if your AI looks things up, or takes actions?",
+  ex:{title:"Validate your judge on 20 outputs",min:"15 min",desc:"You are the ground truth.",
+   fields:[["Hand-labeled sample: agreed __ / disagreed __","input",""],
+           ["Rough precision & recall","input","precision ~__% · recall ~__%"],
+           ["Verdict: trustworthy at scale yet? what to fix?","textarea",""]],
+   tip:"No exact math needed: 'it agreed 17/20, and the misses were all false alarms' is a real, useful read."}},
+
+ {n:8,kick:"Automate",title:"When your AI looks things up or acts",meta:"≈12 min read · 1 exercise",
+  why:"what to also check for features that search, take steps, or hold a conversation",
+  scene:"A simple assistant just answers. But yours might look up policy docs (RAG), take actions — check the order system, issue the refund (an agent), or hold a multi-turn conversation. Grading only the final answer isn't enough: it can be right by luck, or wrong for a reason you can't see unless you check the steps.",
+  blocks:`<h3>Check the path, not just the destination</h3>
+   <ul><li><b>Looks things up → <span class="term" data-t="RAG">RAG</span>.</b> A RAG answer fails two ways: wrong docs retrieved, or right docs used badly. So check <i>did it retrieve the right info?</i> and <i>did it use it correctly?</i> Most RAG failures are retrieval failures in disguise.</li>
+   <li><b>Takes steps → <span class="term" data-t="Agent / trajectory">agents</span>.</b> A correct answer can hide a broken <b>trajectory</b> — it issued the refund but pulled the wrong customer and got lucky. Check: right tools? sensible order? no harmful/wasteful actions (double refund)?</li>
+   <li><b>Holds a conversation → multi-turn.</b> Most demos test the first reply. Check: does it remember turn 1 by turn 5? stay consistent? stay on policy as the user pushes?</li></ul>
+   <p>You don't build this — you <b>know what to ask for</b>: "Can we see what it retrieved? Log the steps? Test a 5-turn conversation?" That's what a strong AI PM brings.</p>`,
+  example:`<p>The assistant becomes an agent that issues refunds. New checks beyond "was the reply nice?":</p>
+   <p><b>Retrieval:</b> did it pull the correct order + current policy? <b>Trajectory:</b> did it verify eligibility <i>before</i> refunding, and issue exactly one? <b>Multi-turn:</b> if the user adds "also cancel my subscription," does it handle it without forgetting the refund?</p>`,
+  quote:"A right answer reached the wrong way is a failure you haven't caught yet. Check the path, not just the destination.",
+  tomorrow:"You've built real evals. Now make sure they keep working — and catch quality quietly drifting.",
+  ex:{title:"List your extra checks",min:"12 min",desc:"It can be more than one type.",
+   fields:[["My feature is: simple / RAG / agent / multi-turn","input",""],
+           ["2–3 extra things to check beyond the final answer","textarea","1. …\n2. …"]],
+   tip:"If it's genuinely just 'question in, answer out,' write that down — knowing you don't need these is valid."}},
+
+ {n:9,kick:"Automate",title:"Make it a habit",meta:"≈12 min read · 1 exercise",
+  why:"keep your evals working after the excitement fades, so quality doesn't quietly rot",
+  scene:"You did the work. Quality's good. Three months later it's bad again and nobody noticed until customers did. Two things always happen: regressions (someone tweaks the prompt and breaks something) and drift (the world changes, or the model is updated under you).",
+  blocks:`<h3>Catch regressions: a quality gate</h3>
+   <p>Every time the prompt or model changes, <b>run your test set first and compare to the previous version.</b> If the score drops, it doesn't ship. Track your prompt as v1, v2, v3 against the <b>same</b> test set — 'is v3 better?' becomes a number, not an argument.</p>
+   <p>The automated version is a <span class="term" data-t="Quality gate">quality gate</span> (a CI check). <b>You ask for it; you don't build it:</b> "Before we ship a prompt/model change, it has to pass our eval set. Can we make that required?"</p>
+   <h3>Catch drift: re-check on a schedule</h3>
+   <p>Pick a cadence — weekly is a good default. Re-sample real outputs, re-score, watch the number. A slow slide 92→88→84 is <span class="term" data-t="Drift">drift</span> — you want to see it as a trend, not a cliff customers find first. Refresh your test set with fresh real examples so it never goes stale. And keep spot-checking a few outputs by hand (Day 3, forever, in small doses).</p>`,
+  example:`<p>The team's cadence, one line each:</p>
+   <p><b>On every change:</b> run the 30-case set; block if pass-rate drops. <b>Every Monday:</b> re-score 50 real conversations, log the number. <b>Monthly:</b> swap 10 stale cases for 10 fresh ones. <b>Owner:</b> the PM. Twenty minutes a week buys 'we caught it early.'</p>`,
+  quote:"An eval you run once is a photo. An eval you run on a schedule is a smoke detector.",
+  tomorrow:"The finish line: turn all of this into a fix you'll ship and a report that makes you the most credible person in the room.",
+  ex:{title:"Write your eval cadence",min:"12 min",desc:"What runs when, and who owns it.",
+   fields:[["Before any change ships","input","run test set; block if score drops"],
+           ["Weekly re-sample ritual","input","how many outputs, scored how, logged where"],
+           ["Owner","input",""]],
+   tip:"Draft the one sentence you'll say to engineering to ask for an automated quality gate."}},
+
+ {n:10,kick:"Improve",title:"Close the loop & communicate it",meta:"≈12 min read · capstone",milestone:"finish",
+  why:"turn results into a real improvement, and write the report that earns you credibility",
+  scene:"You've found failure modes, measured them, validated your grader, set a cadence. Here's what nobody says: an eval that doesn't change the product is expensive journaling. The point was never the score — it's a better product, and being able to prove it.",
+  blocks:`<h3>Turn results into improvements</h3>
+   <p>Point the loop at your #1 problem: <b>look → measure baseline → change one thing → re-measure → keep or revert.</b> Levers, cheapest first:</p>
+   <ul><li><b>Fix the prompt</b> — the cheapest, most common fix (most Specification-gulf problems die here).</li>
+   <li><b>Fix retrieval/inputs</b> — for RAG, fix the docs before blaming the model.</li>
+   <li><b>Change architecture/model</b> — add a guardrail or escalation step; the heavier lever.</li></ul>
+   <p>Change one thing, re-run, compare to baseline. You're no longer guessing whether you helped — you can see it.</p>
+   <h3>Communicate it: the eval report</h3>
+   <p>Five plain lines, for stakeholders not engineers: <b>what we measured · how good it is (numbers) · what's still failing (honestly) · the next fix · how we keep it from rotting (your cadence).</b> This changes how leadership sees AI quality — from a black box to something a product person owns, measures, and steers.</p>`,
+  example:`<p><b>Support Assistant — Eval Report</b><br>
+   Measured: policy accuracy, escalation, language match.<br>
+   Quality: policy check now passes <b>91%</b> (was 60%); escalation 100%; language 96%.<br>
+   Still failing: ~9% on rare product types.<br>
+   Next fix: add those types to the approved source; expect ~97%.<br>
+   Kept honest: eval gate on every change; 50 conversations re-scored weekly.</p>
+   <p>Five lines — and anyone in the company trusts the person who wrote it.</p>`,
+  quote:"You don't need to be an engineer to own AI quality. Look at your data, measure what matters, keep it honest. That's the job — and now it's yours.",
+  tomorrow:"That's the course. Run it on a second feature (twice as fast now), share your plan, and pass it on.",
+  ex:{title:"Finish your Eval Plan",min:"15 min",desc:"The capstone — your take-home deliverable.",
+   fields:[["My #1 failure mode → the next fix I'll ship","textarea",""],
+           ["My one-paragraph eval report (the 5 lines)","textarea","Measured: …\nQuality: …\nStill failing: …\nNext fix: …\nKept honest: …"]],
+   tip:"Scroll your finished plan top to bottom — feature, gulfs, failure modes, rubric, graders, trust, cadence, fix, report. That's a complete eval practice. Yours."}},
+];
+
+/* ============================ STATE ============================ */
+const KEY="evals_playbook_v1";
+let store = JSON.parse(localStorage.getItem(KEY) || '{"done":[],"answers":{}}');
+function save(){ localStorage.setItem(KEY, JSON.stringify(store)); refreshProgress(); }
+function isDone(n){ return store.done.includes(n); }
+function nextDay(){ for(let i=1;i<=10;i++) if(!isDone(i)) return i; return 10; }
+
+/* ============================ ROUTER ============================ */
+const app=document.getElementById('app');
+function go(view,arg){ window.scrollTo(0,0);
+  if(view==='home') renderHome();
+  else if(view==='trail') renderTrail();
+  else if(view==='day') renderDay(arg);
+  else if(view==='plan') renderPlan();
+}
+
+/* ---------- HOME / LANDING ---------- */
+function renderHome(){
+  const nd=nextDay(), started=store.done.length>0;
+  app.innerHTML=`<div class="view">
+   <div class="hero">
+     <span class="tag">Free · 10 days · no code</span>
+     <h1>Learn <span class="grad">AI Evals</span><br>in 10 days.</h1>
+     <p class="lead">Go from vibe-checking your AI to running a real, data-driven eval practice — in ≈12 minutes a day.</p>
+     <p class="aud">For AI PMs, product managers, analysts &amp; anyone tired of guessing whether their AI is any good.</p>
+     <div class="cta-row">
+       <button class="btn" onclick="go('day',${started?nd:1})">${started?`Continue · Day ${nd} →`:'Start Day 1 — free →'}</button>
+       <button class="btn ghost" onclick="go('trail')">See all 10 days</button>
+     </div>
+     <div class="facts"><div class="fact"><b>0</b> lines of code</div><div class="fact"><b>1</b> real exercise a day</div><div class="fact">leave with <b>your</b> Eval Plan</div></div>
+   </div>
+
+   <div class="sectitle">The journey — one step a day</div>
+   <div class="lifecycle">
+     <span class="lc">Look at your data <span class="d">· Days 1–4</span></span><span class="arr">→</span>
+     <span class="lc">Measure <span class="d">· Day 5</span></span><span class="arr">→</span>
+     <span class="lc">Validate <span class="d">· 6–7</span></span><span class="arr">→</span>
+     <span class="lc">Automate <span class="d">· 8–9</span></span><span class="arr">→</span>
+     <span class="lc">Improve <span class="d">· Day 10</span></span>
+   </div>
+
+   <div class="sectitle">You leave with a real deliverable</div>
+   <div class="artifact-card">
+     <div class="doc"><div class="l dn"></div><div class="l dn"></div><div class="l"></div><div class="l"></div><div class="l" style="width:60%"></div></div>
+     <div><h4>My Eval Plan</h4><p class="muted sm">Each exercise fills one section. By Day 10 it's a complete, one-page eval plan for one of your own features — not a certificate, a tool you can use Monday.</p></div>
+   </div>
+
+   <div class="sectitle">The 10 days</div>
+   ${DAYS.map(d=>`<div class="tnode ${isDone(d.n)?'done':(d.n===nd?'today':'')} ${d.milestone==='halfway'?'flag':''} ${d.milestone==='finish'?'medal':''}" onclick="go('day',${d.n})">
+       <div class="bead">${isDone(d.n)?'✓':(d.milestone==='finish'?'★':(d.milestone==='halfway'?'⚑':d.n))}</div>
+       <div class="tcard"><div><div class="dlabel">DAY ${d.n}</div><div class="ttitle">${d.title}</div></div>
+       ${d.n===nd?'<span class="chip today">TODAY</span>':isDone(d.n)?'<span class="chip done">DONE</span>':d.milestone==='halfway'?'<span class="chip flag">HALFWAY</span>':d.milestone==='finish'?'<span class="chip medal">FINISH</span>':''}</div>
+     </div>`).join('')}
+  </div>`;
+}
+
+/* ---------- TRAIL ---------- */
+function renderTrail(){
+  const nd=nextDay();
+  app.innerHTML=`<div class="view">
+   <div class="trail-head"><div><div class="sectitle" style="margin:0">Your trail</div><h2 class="h">${store.done.length} of 10 complete</h2></div>
+     <button class="btn sm" onclick="go('day',${nd})">${store.done.length?'Continue':'Start'} →</button></div>
+   <div class="trail">
+   ${DAYS.map(d=>`<div class="tnode ${isDone(d.n)?'done':(d.n===nd?'today':'')} ${d.milestone==='halfway'?'flag':''} ${d.milestone==='finish'?'medal':''}" onclick="go('day',${d.n})">
+       <div class="bead">${isDone(d.n)?'✓':(d.milestone==='finish'?'★':(d.milestone==='halfway'?'⚑':d.n))}</div>
+       <div class="tcard"><div><div class="dlabel">DAY ${d.n} · ${d.kick}</div><div class="ttitle">${d.title}</div></div>
+       ${d.n===nd?'<span class="chip today">TODAY</span>':isDone(d.n)?'<span class="chip done">DONE</span>':d.milestone==='halfway'?'<span class="chip flag">HALFWAY</span>':d.milestone==='finish'?'<span class="chip medal">FINISH</span>':''}</div>
+     </div>`).join('')}
+   </div></div>`;
+}
+
+/* ---------- DAY ---------- */
+function renderDay(n){
+  const d=DAYS[n-1]; const a=store.answers[n]||{};
+  app.innerHTML=`<div class="view">
+   <div class="crumbs"><a onclick="go('trail')" style="cursor:pointer">← Trail</a> · Day ${n} of 10</div>
+   <div class="daytop"><div class="kick">Day ${d.n} · ${d.kick}</div><h1 class="h">${d.title}</h1>
+     <div class="meta">${d.meta} · <span class="muted">${d.why}</span></div></div>
+   <div class="scene">${d.scene}</div>
+   <div class="lblock">${d.blocks}</div>
+   <div class="example"><div class="x">Worked example</div>${d.example}</div>
+   <div class="pull"><div class="q">"${d.quote}"</div><span class="share" onclick="toast('Share card copied ✓')">↗ Share this</span></div>
+   <div class="tomorrow"><b>Tomorrow →</b> ${d.tomorrow}</div>
+
+   <div class="exercise">
+     <div class="eh"><span class="min">${d.ex.min}</span><h3>✍️ ${d.ex.title}</h3></div>
+     <p class="ed">${d.ex.desc} <span class="muted">Saves into your Eval Plan.</span></p>
+     ${d.ex.fields.map((f,i)=>`<label>${f[0]}</label>${f[1]==='textarea'
+        ?`<textarea rows="3" placeholder="${f[2]}" oninput="ans(${n},${i},this.value)">${a[i]||''}</textarea>`
+        :`<input placeholder="${f[2]}" value="${(a[i]||'').replace(/"/g,'&quot;')}" oninput="ans(${n},${i},this.value)">`}`).join('')}
+     <div class="tip">💡 ${d.ex.tip}</div>
+   </div>
+
+   <div class="daynav">
+     ${n>1?`<button class="btn ghost" onclick="go('day',${n-1})">← Day ${n-1}</button>`:`<button class="btn ghost" onclick="go('home')">← Home</button>`}
+     <button class="btn" onclick="complete(${n})">${isDone(n)?(n<10?`Next · Day ${n+1} →`:'Review your plan →'):'Mark Day '+n+' complete ✓'}</button>
+   </div>
+  </div>`;
+}
+function ans(n,i,v){ (store.answers[n]=store.answers[n]||{})[i]=v; localStorage.setItem(KEY,JSON.stringify(store)); }
+function complete(n){
+  if(!isDone(n)){ store.done.push(n); save();
+    const d=DAYS[n-1];
+    if(d.milestone==='halfway') return milestone('halfway',n);
+    if(d.milestone==='finish') return milestone('finish',n);
+  }
+  if(n<10) go('day',n+1); else go('plan');
+}
+
+/* ---------- PLAN ---------- */
+function renderPlan(){
+  const pct=Math.round(store.done.length/10*100);
+  app.innerHTML=`<div class="view">
+   <div class="sectitle" style="margin-top:0">Your take-home deliverable</div>
+   <h2 class="h" style="font-size:25px">My Eval Plan</h2>
+   <p class="muted sm">${store.done.length}/10 sections complete · this is what you walk away with.</p>
+   <div class="plan-prog"><i style="width:${pct}%"></i></div>
+   <div class="planlist">
+   ${DAYS.map(d=>`<div class="pitem ${isDone(d.n)?'done':''}" onclick="go('day',${d.n})" style="cursor:pointer">
+       <div class="s">${isDone(d.n)?'✓':d.n}</div>
+       <div class="pt">${d.ex.title}</div><div class="pd">Day ${d.n}</div></div>`).join('')}
+   </div>
+   <div class="exportbar">
+     <button class="btn" onclick="toast('Exported (mockup) ✓')">Export plan ▾</button>
+     <button class="btn ghost" onclick="go('home')">Back to course</button>
+   </div>
+  </div>`;
+}
+
+/* ---------- MILESTONE MODAL ---------- */
+function milestone(type,n){
+  const ms=document.getElementById('modalScrim'), b=document.getElementById('modalBody');
+  if(type==='halfway'){ b.innerHTML=`<div class="big">⚑</div><h2>Halfway there!</h2>
+     <p>You can now read your own data and name what's breaking — that already puts you ahead of most teams.</p>
+     <div class="sharecard"><small>AI Evals Playbook · Day 5</small>"I'm halfway through learning AI evals — I can read my AI's real data and name what's breaking. No code required."</div>
+     <div class="row"><button class="btn ghost" onclick="toast('Share card copied ✓')">Share</button>
+       <button class="btn" onclick="closeModal();go('day',6)">Keep going →</button></div>`; }
+  else { b.innerHTML=`<div class="big">🏅</div><h2>You did it.</h2>
+     <p>Ten days ago "is our AI good?" was a shrug. Now you can answer it with data, defend it, and keep it honest. You went from couch to 5k.</p>
+     <div class="sharecard"><small>AI Evals Playbook · Complete</small>"I just built a real eval practice for my AI product in 10 days — no code. Here's my Eval Plan."</div>
+     <div class="row"><button class="btn ghost" onclick="toast('Share card copied ✓')">Share</button>
+       <button class="btn" onclick="closeModal();go('plan')">See my Eval Plan →</button></div>`; }
+  ms.classList.add('open');
+}
+function closeModal(){ document.getElementById('modalScrim').classList.remove('open'); }
+
+/* ---------- GLOSSARY ---------- */
+function renderGloss(q=''){ q=q.toLowerCase();
+  document.getElementById('glist').innerHTML=GLOSS.filter(([t,d])=>(t+d).toLowerCase().includes(q))
+    .map(([t,d])=>`<div class="gterm" id="g-${t.replace(/[^a-z]/gi,'')}"><div class="t">${t}</div><div class="d">${d}</div></div>`).join('')
+    || '<p class="muted sm" style="padding:12px 0">No match.</p>';
+}
+function openGloss(term){ document.getElementById('scrim').classList.add('open');
+  document.getElementById('drawer').classList.add('open'); renderGloss('');
+  if(term){ const el=document.getElementById('g-'+term.replace(/[^a-z]/gi,''));
+    if(el){ el.classList.add('hot'); el.scrollIntoView({block:'center'}); } } }
+function closeGloss(){ document.getElementById('scrim').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open'); }
+document.addEventListener('click',e=>{ if(e.target.classList.contains('term')) openGloss(e.target.dataset.t); });
+
+/* ---------- toast + progress ---------- */
+let tT;
+function toast(msg){ let t=document.getElementById('toast');
+  if(!t){ t=document.createElement('div'); t.id='toast'; document.body.appendChild(t);
+    t.style.cssText='position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#13151c;color:#fff;padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;z-index:80;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.2s;opacity:0'; }
+  t.textContent=msg; t.style.opacity='1'; clearTimeout(tT); tT=setTimeout(()=>t.style.opacity='0',1600); }
+function refreshProgress(){ const p=store.done.length;
+  document.getElementById('progbar').style.width=(p/10*100)+'%';
+  document.getElementById('progtxt').textContent=p+'/10';
+  document.getElementById('streak').textContent='🔥 '+p; }
+
+/* ---------- boot ---------- */
+renderGloss(''); refreshProgress(); renderHome();
+</script>
+</body>
+</html>
