@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The AI Evals Playbook — Study Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F6FB; --bg-2:#ECEEF7; --card:#FFFFFF; --ink:#13151c; --ink-2:#3b3f4c;
+  --muted:#71768a; --line:#E7E9F2; --line-2:#dfe2ee;
+  --primary:#5B5BD6; --primary-d:#4a48c4; --primary-soft:#ECECFB; --primary-tint:#F3F3FE;
+  --done:#1fa97a; --done-soft:#E3F4EE; --flag:#E0A23A; --flag-soft:#FBEFD8;
+  --aurora:linear-gradient(135deg,#6366F1 0%,#7C8CF8 40%,#22B8A6 100%);
+  --aurora-soft:linear-gradient(135deg,#EEF0FF 0%,#EDF7F4 100%);
+  --shadow:0 14px 38px rgba(30,30,70,.08); --shadow-s:0 6px 18px rgba(30,30,70,.06);
+  --serif:"Space Grotesk",sans-serif; --read:"Newsreader",Georgia,serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* top bar */
+.appbar{position:sticky;top:0;z-index:40;background:rgba(245,246,251,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.appbar .in{max-width:780px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:12px 20px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-weight:700;font-size:15px}
+.brand .mk{width:26px;height:26px;border-radius:8px;background:var(--aurora);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.appbar .spacer{flex:1}
+.pill{font-size:12px;font-weight:600;color:var(--primary);background:var(--primary-soft);padding:6px 12px;border-radius:999px}
+
+/* reading progress */
+.bar{position:fixed;top:0;left:0;height:3px;background:var(--aurora);width:0;z-index:50;transition:width .1s}
+
+/* hero */
+.hero{background:var(--aurora-soft);border-bottom:1px solid var(--line);padding:46px 20px 38px;text-align:center}
+.hero .in{max-width:720px;margin:0 auto}
+.hero .tag{display:inline-block;background:#fff;border:1px solid var(--line);color:var(--primary);font-weight:600;font-size:12px;padding:5px 13px;border-radius:999px;margin-bottom:16px}
+.hero h1{font-family:var(--serif);font-size:38px;font-weight:700;letter-spacing:-.5px;line-height:1.12;margin-bottom:12px}
+.hero h1 .grad{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:17px;color:var(--ink-2);max-width:540px;margin:0 auto}
+.facts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.fact{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 14px;font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.fact b{color:var(--primary)}
+
+/* article */
+.wrap{max-width:720px;margin:0 auto;padding:14px 20px 100px}
+.doc{font-family:var(--read);font-size:19px;line-height:1.72;color:#23262f}
+.doc h2{font-family:var(--serif);font-size:25px;font-weight:700;letter-spacing:-.3px;line-height:1.2;color:var(--ink);
+  margin:48px 0 4px;padding-top:22px;border-top:1px solid var(--line)}
+.doc h2:first-of-type{border-top:none;padding-top:0;margin-top:30px}
+.doc h3{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink);margin:30px 0 6px}
+.doc p{margin:16px 0}
+.doc em{font-style:italic}
+.doc strong{font-weight:600;color:var(--ink)}
+.doc a{color:var(--primary-d);text-decoration:none;border-bottom:1px solid var(--primary-soft)}
+.doc a:hover{border-bottom-color:var(--primary)}
+.doc h1{display:none} /* title handled by hero */
+.doc hr{border:none;border-top:1px solid var(--line);margin:34px 0}
+.doc hr+p, .doc hr+h2{margin-top:24px}
+.doc ul,.doc ol{margin:14px 0 14px 2px;padding-left:24px}
+.doc li{margin:8px 0}
+.doc code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82em;background:var(--bg-2);
+  padding:2px 6px;border-radius:6px;color:var(--primary-d)}
+.doc pre{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:20px 0;
+  box-shadow:var(--shadow-s);overflow-x:auto}
+.doc pre code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;background:none;padding:0;
+  color:var(--ink-2);line-height:1.7;white-space:pre}
+.doc blockquote{font-family:var(--sans);font-size:15.5px;line-height:1.6;background:var(--primary-tint);
+  border:1px solid var(--line);border-left:3px solid var(--primary);border-radius:12px;padding:16px 20px;margin:22px 0;color:var(--ink-2)}
+.doc blockquote p{margin:8px 0}
+.doc blockquote p:first-child{margin-top:0}.doc blockquote p:last-child{margin-bottom:0}
+.doc .tw{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-s)}
+.doc table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14px;background:var(--card)}
+.doc th{background:var(--bg-2);text-align:left;font-weight:600;color:var(--ink);padding:11px 14px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+.doc td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.doc tbody tr:last-child td{border-bottom:none}
+.doc table code{font-size:12.5px}
+
+/* footer cta */
+.foot{max-width:720px;margin:0 auto;padding:0 20px 80px}
+.cta{background:var(--aurora-soft);border:1px solid var(--line);border-radius:20px;padding:30px;text-align:center}
+.cta h3{font-family:var(--serif);font-size:20px;margin-bottom:8px}
+.cta p{color:var(--ink-2);font-size:15px;margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;padding:13px 24px;border-radius:13px;
+  background:var(--primary);color:#fff;text-decoration:none;box-shadow:0 8px 18px rgba(91,91,214,.26)}
+@media(max-width:600px){.hero h1{font-size:30px}.doc{font-size:17.5px}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="appbar"><div class="in">
+  <div class="brand"><span class="mk">✓</span> The AI Evals Playbook</div>
+  <span class="spacer"></span>
+  <span class="pill">Study Notes · ~35 min read</span>
+</div></div>
+
+<div class="hero"><div class="in">
+  <span class="tag">THE FLOWING READ</span>
+  <h1>The whole eval story, <span class="grad">start to finish</span></h1>
+  <p>The same craft as the 10-day course — but as one continuous read you can take in a single sitting. No exercises. Just the why, and how it all connects.</p>
+  <div class="facts">
+    <span class="fact"><b>~35 min</b> read</span>
+    <span class="fact"><b>One</b> running example</span>
+    <span class="fact"><b>No</b> code</span>
+    <span class="fact"><b>12</b> stops</span>
+  </div>
+</div></div>
+
+<div class="wrap"><article class="doc">
+<h1>The AI Evals Playbook — Study Notes</h1>
+<p><em>The whole story, start to finish. Read it like a book, not a checklist.</em></p>
+<blockquote><p><strong>How this differs from the course.</strong> The <a href="overview.md">10-day course</a> is a training plan — a single idea and a single exercise each day, worked <em>on your own feature</em>. These notes cover the same ground as one continuous read: roughly 35 minutes, nothing to fill in. Reach for this when you want the <em>reasoning</em> and the overall shape in one sitting; then go <em>practise</em> it, a day at a time, in the course. Any unfamiliar word is defined plainly in <a href="../GLOSSARY.md"><code>GLOSSARY.md</code></a>.</p><p>One feature travels with us the entire way — a customer-support <strong>refund assistant</strong> — so you can watch it move from <em>&quot;seems okay&quot;</em> to <em>measured, trusted, and steadily improving.</em> One story, eleven stops.</p></blockquote>
+<hr/>
+<h2>1. The trap that catches almost everyone</h2>
+<p>Imagine a product manager who&#x27;s just launched an AI assistant for refund questions. It&#x27;s the first week. She tries a handful of prompts, the replies look reasonable, and she reports back to the team that quality is in good shape. Heads nod. The feature stays live.</p>
+<p>A month and a half later, the support queue is on fire. The assistant has been telling customers about a <em>&quot;30-day refund window&quot;</em> that the business simply doesn&#x27;t have — and it&#x27;s been doing so confidently, again and again. When leadership asks the natural question — <em>just how good is this thing?</em> — there&#x27;s no real answer to give. No measurements were ever taken. There was only an impression.</p>
+<p>That impression has a name: the <strong>vibe-check</strong>. You open the product, prod it a few times, and conclude it feels fine. There&#x27;s nothing shameful about it — it&#x27;s where everyone begins, and as a first glance it&#x27;s perfectly reasonable. What it <em>can&#x27;t</em> do is the problem. It doesn&#x27;t stretch to scale (your assistant fields thousands of conversations; you sampled a few). It can&#x27;t spot a slow decline (on the day quality starts slipping, your gut still says fine). And it isn&#x27;t transferable — an instinct in your head isn&#x27;t something a colleague can pick up and run.</p>
+<p>The distance between <em>&quot;it feels good&quot;</em> and <em>&quot;here is precisely how good it is, and here&#x27;s what&#x27;s going wrong&quot;</em> — that distance is the entire subject of these notes. Bridging it is a discipline, and the discipline has a name.</p>
+<hr/>
+<h2>2. What an eval actually is — and why it&#x27;s <em>your</em> job now</h2>
+<p>An <strong>eval</strong> is a repeatable method for judging whether your AI&#x27;s output is any good. <em>Repeatable</em> is the load-bearing word: run it tomorrow, or hand it to a teammate, and you get the same verdict — and you can stand behind it in front of other people. That&#x27;s the whole gap from a vibe-check. A vibe-check is a private hunch; an eval is a result you&#x27;d put in front of leadership.</p>
+<p>The habit that separates the people who are good at this is borrowed straight from quality assurance: settle on what <em>good</em> means <strong>before</strong> you go looking, and then measure against that definition — never the reverse.</p>
+<p>What surprises a lot of teams is that this lands on the <em>product</em> desk now, not only the engineering one. Old-school software was deterministic: the spec promised a particular behaviour, the code delivered exactly that behaviour, and you could check it off. AI breaks that contract. Feed it the same input twice and the output can differ, and &quot;good&quot; turns into a matter of <em>judgement</em> — was the tone right, was it genuinely helpful, was it correct, was it safe? Someone has to own that judgement, commit it to paper, and defend it, and in most teams the person closest to the user and the business is the one positioned to do so. That&#x27;s why, in just a couple of years, evals went from a niche engineering chore to the headline skill for people who build with AI.</p>
+<p>It helps to know where you actually sit. Modern AI stacks up in three layers, and only one of them is yours to worry about:</p>
+<ul><li><strong>Pre-training</strong> — creating a foundation model from nothing. A budget in the hundreds of millions.</li></ul>
+<p>Not your table.</p>
+<ul><li><strong>Post-training</strong> — the big labs shaping a model to follow instructions and stay safe. Also not</li></ul>
+<p>yours.</p>
+<ul><li><strong>The application layer</strong> — <em>you</em>, taking a ready-made model (Claude, GPT) and wiring it into one</li></ul>
+<p>specific feature. <strong>This is your home turf.</strong> And here&#x27;s what makes evals unavoidable: no public leaderboard exists for &quot;our refund assistant.&quot; Nobody on earth has measured <em>your</em> product except you. Defining good for it falls to you, because it can&#x27;t fall to anyone else.</p>
+<p>Once evals exist, they quietly repay you three ways. They <strong>monitor</strong>, tracking quality over time so a decline shows up on your dashboard before it shows up in your inbox. They act as <strong>guardrails</strong>, intercepting a bad output in the moment and blocking or retrying it. And they fuel <strong>improvement</strong>, pointing at <em>what</em> to change so each edit genuinely advances things instead of just rearranging them. Monitor, guard, improve — hold those three loosely in mind; everything ahead is in service of one of them.</p>
+<p>So that&#x27;s the destination. The remainder of these notes is the route there: study your data, locate what&#x27;s failing, convert &quot;good&quot; into a figure, confirm that figure is trustworthy, and keep the whole arrangement honest as time passes. It opens with a map.</p>
+<hr/>
+<h2>3. The three places AI breaks</h2>
+<p>When the refund assistant produces a poor answer, <em>what went wrong?</em> It seems like there could be a hundred causes. There are really only three, and pinning the right one down is most of the cure. This is <strong>Shreya Shankar&#x27;s Three Gulfs</strong> framework — where a &quot;gulf&quot; is nothing more than a gap between two things that ought to be in step.</p>
+<p>The <strong>Gulf of Comprehension</strong> sits between <em>you and your data</em>: the distance between the inputs and outputs you <em>picture</em> and the ones that <em>actually arrive</em>. In your head the questions are tidy and well-formed. In the wild they&#x27;re riddled with typos, pasted-in email chains, three languages in a single message, the occasional attached PDF. You can&#x27;t assess what you&#x27;ve never laid eyes on — which is exactly why the very next move is to go and read your data.</p>
+<p>The <strong>Gulf of Specification</strong> sits between <em>you and the prompt</em>: the distance between what you <em>had in mind</em> and what you genuinely <em>instructed the AI to do</em>. Plain language leaks. &quot;Be helpful and concise&quot; never once said &quot;and only ever state policies from our approved list.&quot; Every assumption you left unspoken is an opening the model will stroll through. Most &quot;why is the AI so dim&quot; moments are, on inspection, &quot;the instructions were fuzzy&quot; moments.</p>
+<p>The <strong>Gulf of Generalization</strong> sits between <em>a few examples and the real, messy world</em>: the distance between &quot;passes my ten test cases&quot; and &quot;holds up across the five hundred ways real people phrase things.&quot; The assistant aces your demo, so out it goes — and then it meets the long tail of rare, odd, adversarial inputs and fails quietly on some fraction of them. This is the gulf that stays hidden, because a demo never wanders near it.</p>
+<p>The map earns its keep the moment something breaks, because it swaps a useless sentence for a useful one. Instead of <em>&quot;the AI is broken,&quot;</em> you ask <em>&quot;which gulf is this?&quot;</em> Comprehension trouble? Go read more real data. Specification trouble? Sharpen the prompt. Generalization trouble? Widen the test set until it covers the awkward cases. When the assistant conjures that 30-day window, it&#x27;s mostly a <em>specification</em> gulf — nothing in the prompt forbade guessing — with a streak of <em>generalization</em>, since it only slips on the less common questions. Plenty of real failures straddle more than one gulf, and that&#x27;s fine. What you&#x27;ve gained is three precise questions where you used to have one vague gripe.</p>
+<p>Notice that all three remedies open with the same instruction: <em>go and look at your data.</em> So let&#x27;s do precisely that — because it turns out to be the single most powerful item on the whole list.</p>
+<hr/>
+<h2>4. The one skill that beats everything: look at your data</h2>
+<p>Here&#x27;s a true and faintly awkward picture of how teams actually behave. A group burns two weeks debating which pricey eval <em>platform</em> to purchase. All the while, the real defect — the assistant mangles anything that mentions &quot;chargeback&quot; — was sitting in plain view in the first ten real conversations. Nobody had opened them.</p>
+<p>The highest-return move in all of evals is also the least glamorous: <strong>read the outputs your AI is actually producing.</strong> Not dashboards, not roll-up scores — the raw exchanges. The practitioners who teach this craft to engineers at the major labs repeat it endlessly, and it still sounds too plain to matter. It is anything but.</p>
+<p>The thing you read is a <strong>trace</strong>: a single real record of the AI doing its job — the input it received, the output it returned, and (for richer features) the steps it took along the way. The craft of working through a batch of traces and registering what&#x27;s truly going on is <strong>error analysis</strong>, and its opening move is <strong>open coding</strong>. Don&#x27;t be put off by the term: &quot;coding&quot; here means <em>tagging</em>, with no connection to programming, and &quot;open&quot; means you walk in with no ready-made buckets — you simply read and respond.</p>
+<p>The recipe is short enough to hold in one breath. Gather fifteen to twenty <em>genuine</em> outputs — from production or honest hands-on use, not the three flattering ones from the demo. Read each one properly, and jot <strong>one brief, plain note</strong>: what worked, what didn&#x27;t, anything that caught you off guard. Be concrete. Not &quot;bad answer,&quot; but <em>&quot;quoted a 30-day window we don&#x27;t offer&quot;</em> or <em>&quot;accurate, but the tone came off cold and mechanical.&quot;</em> Don&#x27;t repair anything. Don&#x27;t sort into groups yet. Just look clearly.</p>
+<p>Five rows of this on the refund assistant already hand you most of the picture:</p>
+<div class="tw"><table><thead><tr><th>input</th><th>output</th><th>note</th></tr></thead><tbody><tr><td>&quot;can I get a refund after 3 weeks?&quot;</td><td>&quot;Yes! You have 30 days.&quot;</td><td>❌ invented a 30-day window we don&#x27;t have</td></tr><tr><td>&quot;REFUND NOW or I&#x27;m calling my lawyer&quot;</td><td>&quot;Sorry to hear that. Our policy is…&quot;</td><td>❌ legal threat — should hand off to a person, didn&#x27;t</td></tr><tr><td>&quot;how do refunds work&quot;</td><td>&quot;Refunds go to your original payment in 5–7 days.&quot;</td><td>✅ accurate and clear</td></tr><tr><td>&quot;merci, comment ça marche?&quot;</td><td>&quot;I can help! Refunds are…&quot; <em>(in English)</em></td><td>⚠️ replied in English to a French question</td></tr><tr><td>&quot;[pastes 40-line email thread]&quot;</td><td>&quot;Could you clarify your question?&quot;</td><td>⚠️ stumbled on a messy real-world input</td></tr></tbody></table></div>
+<p>See how much falls out of five rows: a fabrication problem, a missing hand-off, a language gap, a messiness gap. <em>None</em> of it was legible from a dashboard. This is also you crossing the Gulf of Comprehension live — your imagination, it turns out, was a far feebler test set than reality. Two small habits keep it painless: work in a spreadsheet (one row per output, columns for input, output, and your note — that&#x27;s the entire toolkit), and pointedly read the <em>uncomfortable</em> ones. The irritated users, the strange inputs, the sprawling messages. &quot;Thanks, that sorted it&quot; teaches you nothing; the messy cases teach you everything.</p>
+<p>Now you&#x27;re holding a heap of notes. By itself it feels like static. The next move turns it into a plan.</p>
+<hr/>
+<h2>5. From a pile of notes to a ranked list of named problems</h2>
+<p>Stare at those notes for a moment and a shape emerges. <em>&quot;Invented a 30-day window,&quot; &quot;made up a return address,&quot; &quot;guessed at a discount&quot;</em> — that isn&#x27;t three problems. It&#x27;s one problem in three disguises: the assistant <strong>fabricates policy.</strong> Name it once and you can suddenly count it, measure it, and go after it. That step — from loose notes to named patterns — is the back half of error analysis, sometimes called <strong>axial coding.</strong> It&#x27;s where the haze hardens into a to-do list.</p>
+<p>The method is just <em>group, name, count, rank.</em> Cluster the notes that are secretly the same underlying fault. Name each cluster as a <strong>behaviour</strong>, and be specific about it — <em>&quot;fabricates a policy that doesn&#x27;t exist,&quot; &quot;fails to escalate legal threats&quot;</em> — rather than mush like <em>&quot;accuracy issues&quot;</em> or <em>&quot;sometimes the tone&#x27;s off,&quot;</em> which are too soft to measure. Tally how often each one turned up in your sample. Then order them by <strong>frequency × severity</strong>. You&#x27;ll usually settle on three to six <strong>failure modes</strong> — a named, recurring way the AI goes wrong. That range is the sweet spot: more and you&#x27;re shaving too fine, fewer and you&#x27;re probably still being vague.</p>
+<p>Two judgement calls live here. The first is the <strong>Pareto move</strong>: nearly always, one or two failure modes account for the bulk of the pain. You don&#x27;t chase them all — you tackle the top one or two, ship, and re-measure. That&#x27;s how evals become forward motion instead of a bottomless backlog. The second is that <strong>severity carries as much weight as frequency.</strong> A fault that strikes 2% of the time but exposes you to a lawsuit (skipping the hand-off on a legal threat) outranks a cosmetic tone wobble that strikes 30% of the time. Rank by how often <em>multiplied by</em> how much it hurts, and lean on your product judgement for the &quot;how much&quot; — that judgement is exactly the thing you bring that an engineer might not.</p>
+<p>For the refund assistant, twenty notes condense into something like this:</p>
+<div class="tw"><table><thead><tr><th>#</th><th>Failure mode</th><th>Count (/20)</th><th>Severity</th><th>Priority</th></tr></thead><tbody><tr><td>1</td><td>Fabricates a policy that doesn&#x27;t exist</td><td>6</td><td>High</td><td>🔥 #1</td></tr><tr><td>2</td><td>Fails to escalate legal/angry cases</td><td>3</td><td>High</td><td>🔥 #2</td></tr><tr><td>3</td><td>Replies in the wrong language</td><td>2</td><td>Medium</td><td>#3</td></tr><tr><td>4</td><td>Stumbles on long/messy pasted input</td><td>2</td><td>Low</td><td>later</td></tr><tr><td>—</td><td>(7 outputs were perfectly fine ✅)</td><td>7</td><td>—</td><td>—</td></tr></tbody></table></div>
+<p>That&#x27;s a plan, not a mood. (You can drop the notes into Claude or ChatGPT and have it sketch the grouping in a couple of minutes — but the final list is <em>yours</em>. The model is a quick sorter; it hasn&#x27;t sat with the data the way you have.) &quot;Fabricates policy&quot; is your #1 — six hits, high stakes. So that&#x27;s the one you&#x27;ll turn into a real measurement next.</p>
+<hr/>
+<h2>6. Turning &quot;good&quot; into a number — the turning point</h2>
+<p>This is the pivot of the whole story. Until now you&#x27;ve been <em>observing</em>; from here on you&#x27;re <em>measuring</em>. And the very first thing you measure exposes why most quality arguments go in circles.</p>
+<p>Two colleagues read the same refund-assistant reply. One scores it &quot;7 out of 10.&quot; The other says &quot;4.&quot; They go back and forth for ten minutes, and neither is actually wrong — because &quot;7/10&quot; carries no shared meaning. It&#x27;s a gut feeling dressed up as a figure. Now flip the question. Suppose the standard is: <em>&quot;FAIL if the reply states any refund policy that isn&#x27;t on our approved list.&quot;</em> Both colleagues look. Both say <strong>FAIL.</strong> Argument over. That&#x27;s the entire force of a good <strong>rubric</strong> — a written rule that calls pass-or-fail on <em>one</em> thing you care about.</p>
+<p>The single most useful tip in these notes is this: <strong>keep it binary. Pass or fail. Not a 1–10 scale.</strong> It feels like a step down. It&#x27;s the opposite, for three reasons. First, 1–10 scores are <em>counterfeit precision</em> — nobody can reliably separate a 6 from a 7, so the disagreement looks like measurement but is really just noise. Second, binary <em>forces a crisp definition</em> — to commit to pass or fail you have to spell out exactly what failure <em>is</em>, and that act of spelling-out is the valuable thinking. Third, binary is <em>actionable</em>: &quot;30% fail this check&quot; tells you exactly what to go fix, whereas &quot;averaging 6.4 out of 10&quot; tells you nothing you can act on. A good rubric is sharp enough that two people grade the same output identically — so try yours on yesterday&#x27;s examples, and if you and a colleague split, the rubric&#x27;s still too loose. Tighten it. Write one rubric per failure mode, beginning with your #1.</p>
+<p>A rubric needs something to run against, and that&#x27;s an <strong>eval dataset</strong> — a test set — which is simply a set of inputs you run the AI on to gauge quality. Begin <em>small</em>: three examples is a fair start, ten is comfortable, and it grows from there. Build it from two directions at once. Pull <strong>real inputs</strong> that trip your failure mode (the traces you read earlier are pure gold), and <strong>generate</strong> more by asking an AI: <em>&quot;Give me 30 varied customer refund questions — some angry, some not in English, some vague.&quot;</em> That generated batch is the fast route to covering the messy long tail — which, you&#x27;ll remember, is the Gulf of Generalization. And cover the hard cases <em>deliberately</em>: a test set made only of easy questions will always look terrific and teach you nothing.</p>
+<p>Beneath all of it — every eval you&#x27;ll ever run, however elaborate — sits one simple five-step loop:</p>
+<pre><code>1. DRAFT the thing you&#x27;re testing (a prompt)
+2. CREATE a test set that mirrors reality
+3. RUN the AI over each case → collect the outputs
+4. GRADE each output against your rubric (pass/fail)
+5. CHANGE one thing &amp; REPEAT → did the score climb?</code></pre>
+<p>Step 5 is where the magic lives. The score becomes a <strong>fixed baseline</strong>: adjust the prompt, run it again, and <em>watch</em> whether you helped or hurt instead of guessing. In practice, run the assistant over ten cases, mark each against the fabrication rubric, and you land on — say — <strong>6 out of 10.</strong> That 60% is your baseline. When you tune the prompt next week and it reaches 9 out of 10, you&#x27;ll <em>know</em> you improved it. And none of this needs special tooling to begin: a spreadsheet of test cases with a pass/fail column is already a real eval. The one snag is that grading ten cases by hand is fine, while grading ten thousand isn&#x27;t. So the grading has to start running on its own.</p>
+<hr/>
+<h2>7. Who does the grading: code checks vs. an AI judge</h2>
+<p>There are exactly two ways to automate grading, and the skill is matching the right one to each failure mode. (You won&#x27;t <em>build</em> either — but you&#x27;ll decide which fits and brief your team, and that call is genuinely yours.)</p>
+<p>A <strong>code evaluator</strong> is a plain, deterministic rule that checks something with an unambiguous yes/no answer — no opinion involved. It either happened or it didn&#x27;t. Reach for it on the rule-shaped things: a mandatory disclaimer is present, the output is a properly formed date, a forbidden word is absent, the system really did route to a human when it was supposed to. On the refund assistant: if any reply that quotes a refund <em>amount</em> must carry the line <em>&quot;final amounts are confirmed by our team,&quot;</em> a code evaluator simply checks whether that exact sentence is there. It&#x27;s quick, essentially free, and never overlooks what you told it to watch — but it only ever catches <em>what you programmed.</em> It can&#x27;t tell you whether a reply was <em>helpful.</em></p>
+<p>An <strong>LLM-as-judge</strong> puts an AI in the grader&#x27;s seat for the <em>subjective</em> qualities — tone, helpfulness, empathy, clarity, whether something honours a policy in spirit — assessing them the way a human reviewer would. Rather than matching keywords, it reads the output and reasons about whether it&#x27;s any good. Reach for it on &quot;is the tone calm and professional?&quot;, &quot;did it genuinely answer the question?&quot;, &quot;does this respect our refund policy in spirit?&quot; It&#x27;s flexible, it notices nuance, and it scales to thousands of outputs — but there&#x27;s a catch we&#x27;ll handle next: it&#x27;s an AI grading an AI, so you have to prove it lines up with humans before you lean on it.</p>
+<p>The two aren&#x27;t competitors; they&#x27;re <strong>layers.</strong> You run both, on different checks — code evaluators for the objective, compliance-flavoured rules, LLM-judges for the subjective quality calls. The rule of thumb writes itself: <em>objective and rule-shaped → code; subjective and judgement-shaped → LLM-judge.</em> Laid across the refund assistant&#x27;s failure modes, the split is clean:</p>
+<div class="tw"><table><thead><tr><th>Failure mode</th><th>Grader</th><th>Why</th></tr></thead><tbody><tr><td>Fabricates a non-existent policy</td><td><strong>LLM-judge</strong></td><td>Must weigh claims against the approved policy <em>by meaning</em></td></tr><tr><td>Fails to escalate legal/angry cases</td><td><strong>Code eval</strong></td><td>Objective: did the hand-off fire? Yes/no</td></tr><tr><td>Replies in the wrong language</td><td><strong>Code eval</strong></td><td>Objective: input language vs. output language</td></tr><tr><td>Robotic / cold tone</td><td><strong>LLM-judge</strong></td><td>A pure judgement call</td></tr></tbody></table></div>
+<p>And an LLM-judge is less mysterious than it sounds — it&#x27;s just a carefully written prompt. Name the one thing to judge (keep it binary), give it the rule (your rubric), and ask for a verdict plus a reason: <em>&quot;You&#x27;re grading a support reply. It PASSES only if every refund policy it names is on this approved list: [list]. Otherwise FAIL. Customer message: {input}. Reply: {output}. Answer PASS or FAIL, then one sentence saying why.&quot;</em> That&#x27;s a working LLM-judge — no code, just a clear prompt and your rubric. Which raises the obvious, slightly uneasy question: can you really trust an AI to grade your AI?</p>
+<hr/>
+<h2>8. Can you trust the judge?</h2>
+<p>Say your LLM-judge reports the assistant fabricating a policy 8% of the time. Reassuring — unless the judge itself is off. Perhaps it&#x27;s overlooking half the genuine fabrications. Perhaps it&#x27;s flagging blameless answers. If your ruler is warped, every figure you quote from it is warped too. So before you lean on an automated grader at scale, you do one modest thing: <strong>measure it against a human.</strong> And the human is you.</p>
+<p>The method is short. Take a sample of outputs — twenty is ample to begin. Grade each one yourself, by hand, pass or fail, using your rubric; <em>that</em> is your <strong>ground truth</strong>, the correct labels as decided by a person. Then set the LLM-judge loose on the same twenty. Line them up. Where do you agree? Where do you part ways? Two figures capture how good the judge is, and although they sound technical they&#x27;re really just common sense.</p>
+<p><strong>Precision</strong> asks: <em>are the alarms real?</em> — of the failures the judge flagged, what share were actually failures? Weak precision means the judge cries wolf: it flags clean answers, you burn time chasing phantoms, and people stop believing the eval. <strong>Recall</strong> asks: <em>is anything slipping past?</em> — of all the failures that genuinely exist, what share did the judge catch? Weak recall means silent misses: the dashboard reads &quot;97% good&quot; while customers keep hitting failures it never noticed. Recall is the more dangerous of the two, precisely because its misses are invisible. The whole thing fits in a small grid:</p>
+<div class="tw"><table><thead><tr><th></th><th>Judge says FAIL</th><th>Judge says PASS</th></tr></thead><tbody><tr><td><strong>Really a fail</strong></td><td>✅ caught it</td><td>❌ missed it (hurts recall)</td></tr><tr><td><strong>Really fine</strong></td><td>❌ false alarm (hurts precision)</td><td>✅ correct</td></tr></tbody></table></div>
+<p>You want both running high — catch the genuine failures <em>and</em> don&#x27;t cry wolf. Walk it through once with numbers: you hand-label twenty answers and find 5 are real fabrications, 15 are clean. The judge flags 6. Of those 6, four were real and two were false alarms → <strong>precision = 4/6 ≈ 67%.</strong> Of the 5 real fabrications, it caught four and missed one → <strong>recall = 4/5 = 80%.</strong> Read: recall&#x27;s respectable, precision&#x27;s shaky. You don&#x27;t bin the judge — you <em>coach</em> it, the way you&#x27;d coach a new reviewer: tighten the rule in its prompt, drop in a couple of worked pass/fail examples so it calibrates, and re-test against your twenty. Run it again, precision climbs past 90%, and <em>now</em> you let it loose on the full traffic. (You don&#x27;t need exact arithmetic either — &quot;it agreed with me 17 times out of 20, and the misses were all false alarms&quot; is a real, useful read.)</p>
+<p>When a judge agrees with humans on both counts, something quietly excellent has happened: you&#x27;ve effectively <em>duplicated a trusted reviewer</em>, one that keeps grading thousands of outputs while you sleep. That&#x27;s the prize. And the technique outlasts AI — precision and recall are how you weigh <em>any</em> automated check against human judgement. Learn it once, keep it forever. An unvalidated judge, by contrast, isn&#x27;t really a measurement at all; it&#x27;s a second opinion you haven&#x27;t yet earned the right to trust.</p>
+<p>Everything so far has quietly assumed the simplest possible feature: a question goes in, an answer comes out. Many real features are richer than that — and they bury their failures in places the final answer never reveals.</p>
+<hr/>
+<h2>9. The trickier features: check the path, not just the destination</h2>
+<p>Your real feature might do more than answer. It might <strong>look things up</strong> before replying (that&#x27;s <strong>RAG</strong>). It might <strong>take actions</strong> — query the order system, issue the refund, email the customer (that&#x27;s an <strong>agent</strong>). It might <strong>hold a conversation</strong> across many turns (<strong>multi-turn</strong>). For all three, grading the final answer alone isn&#x27;t enough, because the answer can be right by luck or wrong for a reason you&#x27;ll never spot unless you inspect the steps.</p>
+<p><strong>When it looks things up (RAG),</strong> ask <em>did it retrieve the right material?</em> A RAG answer can fail in two completely separate ways: retrieval misfired (it pulled the wrong documents, or nothing), or generation misfired (the right documents were in hand and the reply was still poor). So there are two questions rather than one — <em>did it surface the correct source,</em> and, having surfaced it, <em>did it answer faithfully from that source?</em> A wrong reply traced to a <em>missing</em> document needs a completely different remedy than one traced to a <em>present</em> document. The PM takeaway: keep asking &quot;which documents did it actually pull?&quot; — most RAG breakdowns are retrieval breakdowns in a generation costume.</p>
+<p><strong>When it takes steps (an agent),</strong> ask <em>did it follow a sensible path?</em> An agent doesn&#x27;t merely answer; it plans, selects tools, makes calls, and strings the steps together — and that ordered chain of steps is its <strong>trajectory.</strong> Here a correct final answer can disguise a broken path: it issued the right refund, but en route it opened the <em>wrong</em> customer&#x27;s record and simply got away with it. So you weigh the trajectory itself — did it reach for the right tools, move through reasonable steps in a reasonable order, and avoid harmful or wasteful moves like firing off a double refund? A correct answer arrived at by a reckless route will, given time, arrive at a wrong and expensive one.</p>
+<p><strong>When it holds a conversation (multi-turn),</strong> ask <em>does quality survive turn 5?</em> Most demos test only the opening reply; real people go back and forth. Does the assistant recall what was said three turns ago, stay consistent rather than contradict itself, and hold the policy line as the user rephrases and pushes? Failures love to hide in turn 4.</p>
+<p>You don&#x27;t need to <em>build</em> trajectory tracking or retrieval logging. Your job is to <strong>know what to ask for</strong>: &quot;Which documents did the model pull?&quot; &quot;Can we record the sequence of steps it took?&quot; &quot;Can we exercise a five-turn exchange in testing, not just the first reply?&quot; Posing those questions is precisely what a sharp AI PM contributes. (And if your feature really is plain question-in, answer-out, then realising you <em>don&#x27;t</em> need these checks is itself a useful, valid conclusion.)</p>
+<p>By now you&#x27;ve built something real. The last danger is that it quietly stops working once everyone&#x27;s attention has moved on.</p>
+<hr/>
+<h2>10. Keeping it alive: regressions and drift</h2>
+<p>Here&#x27;s the cruel twist. You did all the work — surfaced the failure modes, wrote the rubrics, validated the judge. Quality&#x27;s good. Three months on it&#x27;s bad again, and nobody noticed until the customers did. Two things always happen to AI products over time, and an eval you run <em>once</em> catches neither. An eval that runs <em>on a schedule</em> catches both.</p>
+<p>The first is <strong>regression</strong>: a prompt edit or a model swap quietly knocks over something that had been working fine. The defence is a <strong>quality gate.</strong> Whenever the prompt or model is touched, the test set runs before anything else, and the fresh score is held up against the last one; if it slipped, the change stays on the bench until that&#x27;s put right. This is where <strong>prompt versioning</strong> pays off: track the prompt as v1, v2, v3, and grade each against the <em>same</em> test set, so &quot;is v3 better than v2?&quot; resolves to a number rather than a debate. The automated version of this is what engineers call a <strong>CI check</strong> — it fires on every change and blocks the bad ones — and you don&#x27;t build it, you <em>ask</em> for it. Your one line: <em>&quot;No prompt or model change ships until it clears our eval set — can we make that a hard requirement?&quot;</em> That single sentence recasts you as the PM who heads off the fire drills rather than the one fighting them.</p>
+<p>The second is <strong>drift</strong>: nothing changes on your side, but the world moves, and quality slowly slides. Your inputs shift (new products, new slang, fresh edge cases your original test set never imagined), and the <em>model itself</em> can shift beneath you (vendors update models, and behaviour changes with no notice — one widely cited study found a model&#x27;s accuracy on a task swinging sharply between two versions a few months apart). The defence is cheap and humble: choose a cadence — weekly is a sound default — re-sample real production outputs, re-grade them, and watch the number over time. A gentle slide from 92% → 88% → 84% is drift, and you want to catch it as a soft trend on your own dashboard, not as a cliff your customers discover for you. Keep the test set fresh too — periodically swap in new real examples, because a test set frozen at launch gradually stops describing your actual product.</p>
+<p>And keep a human in the loop. The automated graders carry the bulk of the load, yet the best teams still read a few real traces by hand every week. It keeps your own judgement calibrated and surfaces the brand-new failure mode that nobody ever told the automated checks to watch for — which is really just the look-at-your-data habit from earlier, repeated forever in small doses. The whole routine fits in a breath: <em>check before every change, re-sample weekly, refresh the test set, and keep reading a few real outputs by hand.</em> Call it twenty minutes a week — the price of catching trouble yourself instead of hearing about it from a customer.</p>
+<p>There&#x27;s one move left — the one that turns all this measurement into something the business genuinely cares about.</p>
+<hr/>
+<h2>11. Closing the loop: improve it, then prove it</h2>
+<p>Here&#x27;s what rarely gets said out loud: <strong>an eval that never changes the product is just costly diary-keeping.</strong> The score was never the point. A better product is the point — along with being able to demonstrate it to whoever controls the budget and the roadmap. Two moves shut the loop: first you <em>improve,</em> then you <em>make the case.</em></p>
+<p>To <strong>improve</strong>, aim that same five-step loop from earlier at your #1 failure mode — look at the failures, set a baseline, change one thing, re-measure, then keep it or roll it back. Your levers, cheapest first: <strong>fix the prompt</strong> (the most common and cheapest fix — <em>&quot;only state policies from this list; if you&#x27;re unsure, say you&#x27;ll check&quot;</em> kills off a lot of fabrication, and most Specification-gulf problems die right here); <strong>fix the inputs or retrieval</strong> (if it&#x27;s a RAG feature pulling the wrong documents, repair retrieval before you blame the model); or <strong>change the architecture or model</strong> (add a guardrail, add an escalation step, or upgrade the model — the heavy lever, for when prompt fixes plateau). The discipline that makes you trustworthy is the same one from the start: change one thing, run the eval again, compare to baseline. Up? Keep it. Not? Revert and try the next idea. You&#x27;ve stopped guessing whether you helped — you can see it.</p>
+<p>To <strong>communicate</strong>, write a short <strong>eval report</strong> — aimed at stakeholders, not engineers. The same facts can land as &quot;trust me, it&#x27;s good&quot; or as a tight, credible case that wins you resources, and the difference is five plain lines: <em>what we measured</em> (the feature and its top failure modes), <em>how good it is</em> (pass rates in plain numbers), <em>what&#x27;s still failing</em> (honestly, the biggest remaining problem), <em>what we&#x27;re doing about it</em> (the next fix and its expected effect), and <em>how we know it won&#x27;t rot</em> (your cadence — the smoke detector from the previous section). For the refund assistant it reads like this:</p>
+<blockquote><p><strong>Refund Assistant — Eval Report (this month)</strong> <strong>Measured:</strong> policy accuracy, escalation of legal/angry cases, language match. <strong>Quality:</strong> policy-accuracy check now passes <strong>91%</strong> (was 60% at the start of the month); escalation <strong>100%</strong>; language match <strong>96%</strong>. <strong>Still failing:</strong> ~9% of replies on rare product types still state an unverified policy. <strong>Next fix:</strong> add those product types to the approved-policy source; expect 91% → ~97%. <strong>How we keep it honest:</strong> 30-case eval gate on every prompt change; 50 real conversations re-graded weekly; test set refreshed monthly.</p></blockquote>
+<p>Five lines. A busy executive grasps it in thirty seconds; a sceptical one can&#x27;t find a hole to poke. Numbers and honesty beat adjectives every time. And the report does something larger than report: it shifts how leadership <em>sees</em> AI quality — from a black box they accept on faith into something a product person owns, measures, and steers. It&#x27;s the artifact that gets your programme funded rather than cut, and — not by coincidence — exactly the kind of document compliance and governance teams increasingly want as AI oversight tightens.</p>
+<hr/>
+<h2>12. Where this leaves you</h2>
+<p>Walk back across the whole arc. You started where nearly everyone starts — opening the product, trying a few things, pronouncing it good. Then you gave that instinct a backbone. You learned what an eval really is and why owning it is now a product job. You got a map of the three places AI breaks. You did the unglamorous, decisive thing — <em>read your actual data</em> — and turned a heap of notes into a ranked list of named failure modes. You made &quot;good&quot; measurable with binary rubrics and a small test set, matched the right grader to each problem, and <em>proved</em> you could trust the AI judge using precision and recall. You learned to check the path and not just the destination on the trickier features. You built a habit that catches regressions and drift before customers do. And you closed the loop — turning results into a concrete fix and a five-line report that leaves you the person in the room whose read on quality everyone trusts.</p>
+<p><strong>In a breath:</strong> <em>Owning AI quality was never an engineering credential. It&#x27;s four habits — read your data, measure what counts, show the measurement holds up, and keep it honest as time passes. That&#x27;s the job, and it&#x27;s yours now.</em></p>
+<p>When you&#x27;re ready to do it for real — on <em>your</em> feature, a bite a day — start the <a href="overview.md">10-day course</a> at <a href="day-01.md">Day 1</a>, and keep your work in the <a href="my-eval-plan-template.md">Eval Plan template</a>. Reading this through was the map. The course is the walk.</p>
+<hr/>
+<h3>A note on sources, originality, and copyright</h3>
+<p>These notes are an <strong>original synthesis written for this playbook.</strong> They contain no verbatim text copied from any book, course, article, or other source — every sentence here was composed for these notes. What&#x27;s borrowed is <em>ideas and terminology</em>, which are credited to the people who developed them; ideas and framework names aren&#x27;t subject to copyright, and they&#x27;re attributed here as a matter of good practice:</p>
+<ul><li><strong>Hamel Husain &amp; Shreya Shankar</strong>, <em>Evals for AI Engineers</em> — error analysis (open and axial</li></ul>
+<p>coding, themselves rooted in long-standing qualitative-research practice), binary rubrics, automated evaluators, RAG / agent / multi-turn evaluation, CI-style quality gates, and the improvement loop. (<a href="https://hamel.dev/blog/posts/evals-faq/">Hamel&#x27;s LLM Evals FAQ</a>)</p>
+<ul><li><strong>Shreya Shankar&#x27;s Three Gulfs</strong> framework — Comprehension, Specification, Generalization (building</li></ul>
+<p>on Don Norman&#x27;s gulfs of execution and evaluation, 1988).</p>
+<ul><li><strong>LinkedIn Learning</strong> courses on a typical eval workflow, automated evals (code evaluators &amp;</li></ul>
+<p>LLM-as-judge, precision/recall for validating graders), and evaluation reports as stakeholder artifacts.</p>
+<ul><li><strong>Lenny&#x27;s Newsletter</strong>, <a href="https://www.lennysnewsletter.com/p/why-ai-evals-are-the-hottest-new-skill">Why AI evals are the hottest new skill</a>,</li></ul>
+<p>for the product framing.</p>
+<p>The running example — the refund assistant, its failure modes, the sample traces, the rubric, the numbers, and the report — is <strong>invented for this playbook</strong> and does not reproduce any example from the sources above.</p>
+</article></div>
+
+<div class="foot"><div class="cta">
+  <h3>Ready to do it for real?</h3>
+  <p>Reading this was the map. The 10-day course is the walk — one idea, one exercise a day, on your own AI feature.</p>
+  <a class="btn" href="#">Start the 10-day course →</a>
+</div></div>
+
+<script>
+const bar=document.getElementById('bar');
+addEventListener('scroll',()=>{const h=document.documentElement;const sc=h.scrollTop/(h.scrollHeight-h.clientHeight);bar.style.width=(sc*100)+'%';});
+</script>
+</body></html>
