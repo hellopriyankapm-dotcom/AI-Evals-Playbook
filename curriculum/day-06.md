@@ -27,9 +27,11 @@ answer. No judgment, no opinion — it either happened or it didn't.
 **Use it for:** required disclaimers present, output is valid (e.g., a properly formatted date),
 a banned word is absent, the system routed to a human when it should have.
 
-**The classic example (insurance bot):** if a customer says *"I want to talk to a human,"* the
-system **must** hand off to a human agent. A code evaluator checks: did the message contain that
-request, and did the hand-off actually fire? It's not subjective — it happened or it didn't.
+**An example with our refund bot:** company policy says that any answer quoting a refund *amount*
+must include the line *"final amounts are confirmed by our team."* A code evaluator just checks:
+is that exact sentence present when an amount is mentioned? It's there or it isn't — no judgment
+involved. (Same idea for an escalation rule: if the customer types *"cancel my account,"* a code
+check can confirm the hand-off to a human actually fired.)
 
 - ✅ **Strengths:** fast, basically free, never misses what it's told to check.
 - ⚠️ **Limit:** it only catches exactly what you programmed. It can't judge "was this *helpful*?"
@@ -37,8 +39,8 @@ request, and did the hand-off actually fire? It's not subjective — it happened
 ### 2. LLM-as-judge — for things that need judgment
 
 An **LLM-as-judge** uses an AI to grade the *subjective* qualities — tone, helpfulness, empathy,
-clarity, policy adherence — the way a human reviewer would. It's *"closer to human annotation"*:
-it reads the output and reasons about quality.
+clarity, policy adherence — the way a human reviewer would. Instead of matching keywords, it reads
+the output and reasons about whether it's actually good, much closer to how a person would mark it.
 
 **Use it for:** "Is the tone calm and professional?" "Did it actually answer the question?" "Does
 this follow our refund policy in spirit?" — the things a checklist of keywords can't capture.

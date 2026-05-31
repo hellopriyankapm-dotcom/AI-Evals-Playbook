@@ -50,8 +50,8 @@ failures it never noticed. This is the more dangerous one — silent misses.
 | **Really fine** | ❌ **false alarm** (hurts precision) | ✅ correct |
 
 You want both high: catch the real failures (recall) without crying wolf (precision). When a
-judge agrees with humans on both, you've got *"a human reviewer built into your system"* — running
-automatically, on thousands of outputs, while you sleep. **That's the prize.**
+judge agrees with humans on both, it's effectively a trusted reviewer that you've cloned — one that
+keeps grading thousands of outputs automatically while you sleep. **That's the prize.**
 
 ### What if the judge is bad?
 

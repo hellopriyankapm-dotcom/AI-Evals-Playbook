@@ -51,8 +51,8 @@ That's it. It feels too simple to be powerful. It is the opposite of too simple.
 - **It kills "vibes-driven" debates.** "I feel like it's gotten worse" loses to "here are 8
   outputs where it invented a policy."
 
-> Hamel Husain's blunt version: *the answer to "what eval should I build?" is almost always "go
-> look at your data first."*
+> Practitioners like Hamel Husain make this point constantly: when someone asks which fancy eval
+> to build first, the honest answer is almost always *go read your own data first.*
 
 ### Two tips that make it painless
 

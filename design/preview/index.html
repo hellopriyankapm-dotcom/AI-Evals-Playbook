@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Evals Playbook — Design Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF6F0; --paper-2:#F3EDE4; --card:#FFFFFF; --ink:#2A2622;
+    --muted:#7A7068; --line:#E7DFD4; --accent:#E2693C; --accent-soft:#FBE6DB;
+    --done:#2E9E6B; --done-soft:#E2F1E9; --flag:#C99A2E; --shadow:0 10px 30px rgba(60,40,20,.08);
+    --serif:"Fraunces",Georgia,serif; --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper-2);color:var(--ink);font-family:var(--sans);
+    line-height:1.55;-webkit-font-smoothing:antialiased;padding:32px 16px 80px}
+  .wrap{max-width:1120px;margin:0 auto}
+  header.page{text-align:center;margin-bottom:8px}
+  header.page h1{font-family:var(--serif);font-weight:600;font-size:30px;letter-spacing:-.5px}
+  header.page p{color:var(--muted);font-size:15px;margin-top:6px}
+  .tagpill{display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px}
+
+  /* tab nav */
+  nav.tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:22px 0 30px}
+  nav.tabs button{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--muted);
+    background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:999px;
+    cursor:pointer;transition:.15s}
+  nav.tabs button:hover{border-color:var(--accent);color:var(--accent)}
+  nav.tabs button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  /* phone frame */
+  .stage{display:flex;justify-content:center}
+  .phone{width:380px;max-width:100%;background:var(--paper);border-radius:38px;
+    box-shadow:var(--shadow),0 0 0 10px #fff,0 0 0 11px var(--line);
+    padding:20px 18px 26px;position:relative;min-height:760px}
+  .notch{width:120px;height:26px;background:#fff;border:1px solid var(--line);border-top:none;
+    border-radius:0 0 16px 16px;margin:-20px auto 14px}
+  .statusrow{display:flex;justify-content:space-between;align-items:center;font-size:12px;
+    color:var(--muted);font-weight:600;margin-bottom:10px}
+  .ring{display:inline-flex;align-items:center;gap:6px}
+  .screen{display:none}
+  .screen.show{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  h2.k{font-family:var(--serif);font-weight:600}
+  .center{text-align:center}
+  .btn{display:block;width:100%;text-align:center;background:var(--accent);color:#fff;
+    font-weight:600;font-size:15px;border:none;border-radius:14px;padding:15px;cursor:pointer;
+    box-shadow:0 6px 16px rgba(226,105,60,.28)}
+  .btn.ghost{background:transparent;color:var(--muted);box-shadow:none;font-size:13px;padding:10px}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+
+  /* landing */
+  .landing .logo{font-family:var(--serif);font-weight:700;font-size:22px;text-align:center;margin:18px 0 4px}
+  .landing .promise{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.25;
+    text-align:center;margin:18px 6px;letter-spacing:-.4px}
+  .landing .aud{text-align:center;color:var(--muted);font-size:13px;margin:0 8px 20px}
+  .minitrail{display:flex;align-items:center;justify-content:center;gap:5px;margin:10px 0 6px;flex-wrap:wrap}
+  .dotmini{width:18px;height:18px;border-radius:50%;background:var(--paper-2);
+    border:2px solid var(--line);font-size:9px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+  .dotmini.f{background:var(--flag);border-color:var(--flag);color:#fff}
+  .dotmini.m{background:var(--accent);border-color:var(--accent);color:#fff}
+  .artifact{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;
+    margin-top:14px;box-shadow:var(--shadow)}
+  .artifact h4{font-family:var(--serif);font-size:14px;margin-bottom:8px}
+  .skeleton{height:7px;background:var(--paper-2);border-radius:4px;margin:7px 0}
+  .skeleton.s{width:60%}.skeleton.done{background:var(--done-soft)}
+
+  /* today */
+  .today .day-no{font-family:var(--serif);font-size:13px;letter-spacing:2px;color:var(--accent);
+    text-transform:uppercase;font-weight:600;text-align:center;margin-top:34px}
+  .today h2{font-family:var(--serif);font-size:30px;font-weight:600;text-align:center;
+    line-height:1.2;margin:8px 16px 14px;letter-spacing:-.5px}
+  .meta-chip{text-align:center;color:var(--muted);font-size:13px;margin-bottom:20px}
+  .why{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;
+    text-align:center;font-size:14px;margin-bottom:24px;color:#544}
+  .why b{color:var(--ink)}
+
+  /* trail */
+  .trail{position:relative;padding:6px 0 0 4px}
+  .node{display:flex;align-items:center;gap:14px;position:relative;padding:9px 0}
+  .trail::before{content:"";position:absolute;left:18px;top:24px;bottom:24px;width:2px;background:var(--line)}
+  .bead{width:30px;height:30px;border-radius:50%;flex:none;display:flex;align-items:center;
+    justify-content:center;font-size:12px;font-weight:700;background:var(--paper);
+    border:2px solid var(--line);color:var(--muted);z-index:1}
+  .bead.done{background:var(--done);border-color:var(--done);color:#fff}
+  .bead.today{background:var(--accent);border-color:var(--accent);color:#fff;
+    box-shadow:0 0 0 6px var(--accent-soft)}
+  .bead.flag{border-color:var(--flag);color:var(--flag)}
+  .bead.medal{border-color:var(--flag);color:var(--flag)}
+  .node .lbl{font-size:14px}
+  .node .lbl small{display:block;color:var(--muted);font-size:11.5px}
+  .node.is-today .lbl{font-weight:700;color:var(--accent)}
+  .node .tag{margin-left:auto;font-size:10px;font-weight:700;color:var(--flag)}
+
+  /* lesson */
+  .lessonbar{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);
+    font-weight:600;margin-bottom:4px}
+  .bar{flex:1;height:6px;background:var(--paper-2);border-radius:6px;overflow:hidden}
+  .bar i{display:block;height:100%;width:50%;background:var(--accent)}
+  .kicker{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);
+    font-weight:700;margin-top:18px}
+  .lesson p{font-size:15px;margin:8px 0;color:#3c3631}
+  .term{color:var(--accent);border-bottom:1px dashed var(--accent);cursor:help}
+  .example{background:var(--accent-soft);border-radius:14px;padding:14px;margin:16px 0;font-size:14px}
+  .example b{font-family:var(--serif)}
+  .pull{background:var(--ink);color:#fff;border-radius:16px;padding:20px;margin:18px 0;
+    font-family:var(--serif);font-size:17px;line-height:1.4}
+  .pull .share{display:inline-block;margin-top:12px;font-family:var(--sans);font-size:12px;
+    font-weight:600;color:var(--paper);background:rgba(255,255,255,.14);padding:6px 12px;border-radius:999px}
+  .tomorrow{font-size:13px;color:var(--muted);margin:14px 0 4px}
+
+  /* worksheet */
+  .ws label{font-size:12px;font-weight:600;color:var(--muted);display:block;margin:14px 0 6px}
+  .ws .field{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px}
+  .ws table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+  .ws th,.ws td{border:1px solid var(--line);padding:8px;text-align:left}
+  .ws th{background:var(--paper-2);font-size:11px;color:var(--muted)}
+  .tip{background:var(--done-soft);border-radius:12px;padding:12px;font-size:12.5px;margin:14px 0;color:#2c5a45}
+
+  /* plan */
+  .plan .prog{height:8px;background:var(--paper-2);border-radius:8px;overflow:hidden;margin:6px 0 16px}
+  .plan .prog i{display:block;height:100%;width:35%;background:var(--done)}
+  .plan ul{list-style:none}
+  .plan li{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .plan li .s{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)}
+  .plan li.done .s{background:var(--done);border-color:var(--done);color:#fff}
+  .plan li.now .s{background:var(--accent);border-color:var(--accent);color:#fff}
+  .plan li .d{margin-left:auto;color:var(--muted);font-size:11px}
+
+  /* milestone */
+  .ms{text-align:center;padding-top:30px}
+  .ms .flag{font-size:46px}
+  .ms h2{font-family:var(--serif);font-size:26px;font-weight:600;margin:10px 0}
+  .ms p{font-size:14px;color:#544;margin:0 10px 18px}
+  .sharecard{background:linear-gradient(135deg,#E2693C,#C99A2E);color:#fff;border-radius:16px;
+    padding:20px;font-family:var(--serif);font-size:16px;line-height:1.35;text-align:left;margin-bottom:16px}
+  .sharecard small{font-family:var(--sans);font-weight:600;opacity:.85;display:block;margin-bottom:8px;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+  .row2{display:flex;gap:10px}
+  .row2 .btn{box-shadow:none}
+  .row2 .btn.ghost{border:1px solid var(--line)}
+
+  .caption{text-align:center;color:var(--muted);font-size:12px;margin-top:16px;font-style:italic}
+  footer.note{text-align:center;color:var(--muted);font-size:12px;margin-top:40px;line-height:1.7}
+  @media(max-width:440px){.phone{padding:16px 12px 22px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="page">
+    <div class="tagpill">DESIGN PREVIEW · not final</div>
+    <h1>The AI Evals Playbook</h1>
+    <p>A couch-to-5k-style course experience · tap the tabs to walk the flow</p>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-s="landing" class="active">Landing</button>
+    <button data-s="today">Today</button>
+    <button data-s="trail">The Trail</button>
+    <button data-s="lesson">Lesson</button>
+    <button data-s="worksheet">Exercise</button>
+    <button data-s="plan">My Eval Plan</button>
+    <button data-s="milestone">Milestone</button>
+  </nav>
+
+  <div class="stage">
+    <div class="phone">
+      <div class="notch"></div>
+
+      <!-- LANDING -->
+      <section class="screen show landing" id="landing">
+        <div class="logo">🟠 AI Evals Playbook</div>
+        <div class="promise">Learn AI Evals in 10 days.</div>
+        <div class="aud">No code. Just you, your AI feature, and 12 minutes a day.<br>
+          For PMs, AI PMs, analysts &amp; anyone tired of vibe-checking their AI.</div>
+        <button class="btn" onclick="go('today')">Start Day 1 — free →</button>
+        <div class="center small muted" style="margin:8px 0 18px">no signup needed</div>
+        <div class="minitrail">
+          <span class="dotmini">1</span><span class="dotmini">2</span><span class="dotmini">3</span>
+          <span class="dotmini">4</span><span class="dotmini f">5</span><span class="dotmini">6</span>
+          <span class="dotmini">7</span><span class="dotmini">8</span><span class="dotmini">9</span>
+          <span class="dotmini m">10</span>
+        </div>
+        <div class="center small muted">walk the trail, one day at a time</div>
+        <div class="artifact">
+          <h4>…and you leave with this →</h4>
+          <div class="small muted" style="margin-bottom:6px">My Eval Plan · your feature</div>
+          <div class="skeleton done"></div><div class="skeleton done s"></div>
+          <div class="skeleton"></div><div class="skeleton s"></div>
+          <div class="small" style="margin-top:8px;color:var(--accent);font-weight:600">a real deliverable, not a certificate</div>
+        </div>
+      </section>
+
+      <!-- TODAY -->
+      <section class="screen today" id="today">
+        <div class="statusrow"><span>🔥 3-day streak</span><span class="ring">◔ 3/10 · My Plan</span></div>
+        <div class="day-no">Day 4</div>
+        <h2>From notes to failure modes</h2>
+        <div class="meta-chip">≈12 min read · 1 exercise</div>
+        <div class="why"><b>Why today:</b> turn yesterday's messy notes into a ranked list of what's actually breaking — the thing you'll fix.</div>
+        <button class="btn" onclick="go('lesson')">Start Day 4 →</button>
+        <button class="btn ghost" onclick="go('trail')">← see the whole trail</button>
+      </section>
+
+      <!-- TRAIL -->
+      <section class="screen" id="trail">
+        <div class="statusrow"><span>The Playbook</span><span>🔥 3 · ◔ 3/10</span></div>
+        <div class="trail">
+          <div class="node"><div class="bead done">✓</div><div class="lbl">Stop vibe-checking<small>Day 1</small></div></div>
+          <div class="node"><div class="bead done">✓</div><div class="lbl">The Three Gulfs<small>Day 2</small></div></div>
+          <div class="node"><div class="bead done">✓</div><div class="lbl">Look at your data<small>Day 3</small></div></div>
+          <div class="node is-today"><div class="bead today">4</div><div class="lbl">Failure modes<small>Day 4</small></div><div class="tag">TODAY</div></div>
+          <div class="node"><div class="bead flag">⚑</div><div class="lbl">Rubrics &amp; test set<small>Day 5</small></div><div class="tag">HALFWAY</div></div>
+          <div class="node"><div class="bead">6</div><div class="lbl">Two graders<small>Day 6</small></div></div>
+          <div class="node"><div class="bead">7</div><div class="lbl">Trust your judge<small>Day 7</small></div></div>
+          <div class="node"><div class="bead">8</div><div class="lbl">Looks-up / takes-action<small>Day 8</small></div></div>
+          <div class="node"><div class="bead">9</div><div class="lbl">Make it a habit<small>Day 9</small></div></div>
+          <div class="node"><div class="bead medal">🏅</div><div class="lbl">Capstone<small>Day 10</small></div><div class="tag">FINISH</div></div>
+        </div>
+      </section>
+
+      <!-- LESSON -->
+      <section class="screen lesson" id="lesson">
+        <div class="lessonbar"><span>‹ Day 4</span><div class="bar"><i></i></div><span>50%</span></div>
+        <div class="kicker">The scene</div>
+        <p>You've got 20 freeform notes. They feel like noise. But look closer: "invented a 30-day policy," "made up a return address" — that's the <i>same</i> problem in three outfits.</p>
+        <div class="kicker">The one idea</div>
+        <p>Take your <span class="term" title="Step 1 of error analysis: read each output and write a freeform note.">open-coding</span> notes and group the ones that are really the same problem. Each group becomes a <span class="term" title="A named, recurring way your AI gets things wrong.">failure mode</span> — named, countable, fixable.</p>
+        <div class="example"><b>Worked example.</b> Twenty refund-bot notes collapse into 4 failure modes. "Fabricates a policy" hits 6 times at high severity → that's your #1.</div>
+        <div class="pull">"The AI makes mistakes" is a shrug. "It fabricates policies 30% of the time" is a roadmap.
+          <span class="share">↗ Share</span></div>
+        <button class="btn" onclick="go('worksheet')">Do today's exercise →</button>
+        <div class="tomorrow"><b>Tomorrow →</b> turn your #1 failure mode into a measurement you can trust.</div>
+      </section>
+
+      <!-- WORKSHEET -->
+      <section class="screen ws" id="worksheet">
+        <div class="day-no" style="margin-top:8px">Day 4 · Your turn</div>
+        <h2 class="k" style="font-size:20px;margin:4px 0 2px">Cluster into failure modes</h2>
+        <p class="small muted">Writes straight into your Eval Plan.</p>
+        <label>Failure modes (name · count · severity)</label>
+        <table>
+          <tr><th>#</th><th>Failure mode</th><th>×</th><th>Sev</th></tr>
+          <tr><td>1</td><td>Fabricates a policy</td><td>6</td><td>Hi</td></tr>
+          <tr><td>2</td><td>Fails to escalate</td><td>3</td><td>Hi</td></tr>
+          <tr><td>+</td><td colspan="3" class="muted">add failure mode…</td></tr>
+        </table>
+        <label>⭐ My #1 to fix first</label>
+        <div class="field">Fabricates a policy that doesn't exist ▾</div>
+        <div class="tip">💡 Tip: paste your notes into Claude and ask it to group them into 3–6 modes — then edit. You own the final list.</div>
+        <button class="btn" onclick="go('plan')">Mark Day 4 complete ✓</button>
+      </section>
+
+      <!-- PLAN -->
+      <section class="screen plan" id="plan">
+        <div class="statusrow"><span>My Eval Plan</span><span>Export ▾</span></div>
+        <h2 class="k" style="font-size:18px">Refund-policy answers</h2>
+        <div class="small muted">filling up as you go…</div>
+        <div class="prog"><i></i></div>
+        <ul>
+          <li class="done"><span class="s">✓</span> The feature &amp; baseline <span class="d">Day 1</span></li>
+          <li class="done"><span class="s">✓</span> Three Gulfs <span class="d">Day 2</span></li>
+          <li class="done"><span class="s">✓</span> What I found in my data <span class="d">Day 3</span></li>
+          <li class="now"><span class="s">4</span> My failure modes <span class="d">Day 4</span></li>
+          <li><span class="s"></span> Rubric &amp; test set <span class="d">Day 5</span></li>
+          <li><span class="s"></span> Graders <span class="d">Day 6</span></li>
+          <li><span class="s"></span> Trust my judge <span class="d">Day 7</span></li>
+          <li><span class="s"></span> Extra checks <span class="d">Day 8</span></li>
+          <li><span class="s"></span> Cadence <span class="d">Day 9</span></li>
+          <li><span class="s"></span> Close the loop + report <span class="d">Day 10</span></li>
+        </ul>
+      </section>
+
+      <!-- MILESTONE -->
+      <section class="screen ms" id="milestone">
+        <div class="flag">⚑</div>
+        <h2>Halfway there!</h2>
+        <p>You can now read your own data and name what's breaking — that already puts you ahead of most teams.</p>
+        <div class="sharecard"><small>AI Evals Playbook · Day 5</small>
+          "I'm halfway through learning AI evals — I can read my AI's real data and name what's breaking. No code required."</div>
+        <div class="row2">
+          <button class="btn ghost" onclick="go('trail')">Share</button>
+          <button class="btn" onclick="go('today')">Keep going →</button>
+        </div>
+        <div class="caption">Day 10 shows a 🏅 medal, your finished Eval Plan as the trophy, and a "I built a real eval practice in 10 days" card.</div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="caption">This is a static mockup to preview look &amp; feel — colors, type, the trail, the "one thing today" focus, and the take-home artifact. Nothing here is final.</div>
+
+  <footer class="note">
+    Palette: warm paper + one terracotta accent · Headings: Fraunces (serif) · Body: Inter<br>
+    Inspired by couch-to-5k · upgraded with the <b>My Eval Plan</b> artifact + a glossary on every term.
+  </footer>
+</div>
+
+<script>
+  const tabs=document.getElementById('tabs');
+  function go(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('show'));
+    document.getElementById(id).classList.add('show');
+    [...tabs.children].forEach(b=>b.classList.toggle('active',b.dataset.s===id));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.addEventListener('click',e=>{if(e.target.dataset.s)go(e.target.dataset.s)});
+</script>
+</body>
+</html>
