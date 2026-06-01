@@ -6,7 +6,7 @@
 <title>The AI Evals Playbook — a free 10-day course</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;450;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#F5F6FB; --bg-2:#ECEEF7; --card:#FFFFFF; --ink:#13151c; --ink-2:#3b3f4c;
@@ -14,9 +14,11 @@
   --primary:#5B5BD6; --primary-d:#4a48c4; --primary-soft:#ECECFB; --primary-tint:#F3F3FE;
   --done:#1fa97a; --done-soft:#E3F4EE; --flag:#E0A23A; --flag-soft:#FBEFD8;
   --aurora:linear-gradient(135deg,#6366F1 0%,#7C8CF8 40%,#22B8A6 100%);
+  --aurora-text:linear-gradient(135deg,#5145B8 0%,#6357C9 45%,#0F8A78 100%);
   --aurora-soft:linear-gradient(135deg,#EEF0FF 0%,#EDF7F4 100%);
   --shadow:0 14px 38px rgba(30,30,70,.08); --shadow-s:0 6px 18px rgba(30,30,70,.06);
   --serif:"Space Grotesk",sans-serif; --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --read:"Newsreader",Georgia,serif;
   --r:18px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -60,7 +62,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .hero .tag{display:inline-block;background:#fff;border:1px solid var(--line);color:var(--primary);font-weight:600;
   font-size:12px;padding:5px 13px;border-radius:999px;margin-bottom:18px}
 .hero h1{font-size:40px;font-weight:700;margin-bottom:14px}
-.hero h1 .grad{background:var(--aurora);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 .grad{background:var(--aurora-text);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p.lead{font-size:17px;color:var(--ink-2);max-width:560px;margin:0 auto 10px}
 .hero p.aud{font-size:13.5px;color:var(--muted);max-width:520px;margin:0 auto 26px}
 .hero .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
@@ -200,18 +202,236 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 @media(max-width:560px){
   .hero{padding:34px 20px}.hero h1{font-size:31px}.lifecycle{font-size:11px}
   .view{padding:20px 14px 80px}.prog-mini .track{width:54px}
+  .appbar .in{gap:9px;padding:11px 13px}.brand .bt{display:none}.streak{display:none}
+  .readhero{padding:28px 18px}.readhero h1{font-size:27px}.read .doc{font-size:17.5px}
+  .daytop h1{font-size:25px}.pull{padding:20px}.pull .q{font-size:17px}
+  .scene{font-size:14.5px}.lblock p{font-size:14.5px}.lblock li{font-size:14.5px}
+  .modal{padding:26px 20px;border-radius:20px}
+  .resume{flex-direction:column;align-items:flex-start;gap:10px}.resume .btn{width:100%}
+  .example{overflow-x:auto}.example table{font-size:12px}
+  .psec .ph{flex-wrap:wrap}.psec .pday{margin-left:0}
+  .trail-head{flex-direction:column;align-items:flex-start;gap:10px}
 }
+@media(max-width:400px){
+  .modetog .mt{padding:6px 11px}.gloss-btn{padding:6px 9px}
+  .hero h1{font-size:28px}
+}
+
+/* ---------- mode toggle (Trail <-> Read) ---------- */
+.modetog{display:flex;background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:3px}
+.modetog .mt{font-size:12.5px;font-weight:600;color:var(--muted);padding:6px 14px;border-radius:999px;transition:.15s}
+.modetog .mt.active{background:var(--card);color:var(--primary);box-shadow:var(--shadow-s)}
+.modetog .mt:hover{color:var(--ink)}
+.brand .bt{margin-left:1px}
+
+/* ---------- gradient text (shared) ---------- */
+.grad{background:var(--aurora-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- landing 'read it all' card ---------- */
+.readcard{display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:16px 18px;margin-top:16px;box-shadow:var(--shadow-s);cursor:pointer;transition:.15s;text-align:left;width:100%}
+.readcard:hover{border-color:var(--primary);transform:translateY(-1px)}
+.readcard .ri{width:46px;height:46px;border-radius:12px;background:var(--aurora);display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex:none}
+.readcard .rt{display:flex;flex-direction:column}
+.readcard .rh{font-family:var(--serif);font-weight:600;font-size:15px;color:var(--ink)}
+.readcard .rd{font-size:13px;color:var(--muted);margin-top:2px}
+.readcard .rb{margin-left:auto;font-size:13px;font-weight:600;color:var(--primary);white-space:nowrap}
+
+/* ---------- reading progress bar (read mode) ---------- */
+.rbar{position:fixed;top:0;left:0;height:3px;background:var(--aurora);width:0;z-index:50;transition:width .1s,opacity .2s;opacity:0}
+
+/* ---------- read view (Study Notes in-app) ---------- */
+.view.read{max-width:760px}
+.readhero{background:var(--aurora-soft);border:1px solid var(--line);border-radius:24px;padding:36px 28px;text-align:center;margin-bottom:6px}
+.readhero .tag{display:inline-block;background:#fff;border:1px solid var(--line);color:var(--primary);font-weight:600;
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 13px;border-radius:999px;margin-bottom:14px}
+.readhero h1{font-size:33px;font-weight:700;margin-bottom:12px;line-height:1.14}
+.readhero p{font-size:16px;color:var(--ink-2);max-width:540px;margin:0 auto}
+.rfacts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.rf{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 13px;font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.rf b{color:var(--primary)}
+.read .doc{font-family:var(--read);font-size:18.5px;line-height:1.72;color:#23262f}
+.read .doc h1{display:none}
+.read .doc h2{font-family:var(--serif);font-size:24px;font-weight:700;letter-spacing:-.3px;line-height:1.2;color:var(--ink);
+  margin:46px 0 4px;padding-top:22px;border-top:1px solid var(--line)}
+.read .doc h2:first-of-type{border-top:none;padding-top:0;margin-top:26px}
+.read .doc h3{font-family:var(--serif);font-size:17.5px;font-weight:600;color:var(--ink);margin:28px 0 6px}
+.read .doc p{margin:16px 0}
+.read .doc strong{font-weight:600;color:var(--ink)}
+.read .doc em{font-style:italic}
+.read .doc a{color:var(--primary-d);text-decoration:none;border-bottom:1px solid var(--primary-soft);cursor:pointer}
+.read .doc a:hover{border-bottom-color:var(--primary)}
+.read .doc hr{border:none;border-top:1px solid var(--line);margin:32px 0}
+.read .doc ul,.read .doc ol{margin:14px 0 14px 2px;padding-left:24px}
+.read .doc li{margin:8px 0}
+.read .doc code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82em;background:var(--bg-2);
+  padding:2px 6px;border-radius:6px;color:var(--primary-d)}
+.read .doc pre{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:20px 0;
+  box-shadow:var(--shadow-s);overflow-x:auto}
+.read .doc pre code{font-size:14px;background:none;padding:0;color:var(--ink-2);line-height:1.7;white-space:pre}
+.read .doc blockquote{font-family:var(--sans);font-size:15.5px;line-height:1.6;background:var(--primary-tint);
+  border:1px solid var(--line);border-left:3px solid var(--primary);border-radius:12px;padding:16px 20px;margin:22px 0;color:var(--ink-2)}
+.read .doc blockquote p{margin:8px 0}
+.read .doc .tw{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-s)}
+.read .doc table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:14px;background:var(--card)}
+.read .doc th{background:var(--bg-2);text-align:left;font-weight:600;color:var(--ink);padding:11px 14px;
+  border-bottom:1px solid var(--line-2);white-space:nowrap}
+.read .doc td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.read .doc tbody tr:last-child td{border-bottom:none}
+.readcta{background:var(--aurora-soft);border:1px solid var(--line);border-radius:20px;padding:30px;text-align:center;margin-top:36px}
+.readcta h3{font-size:20px;margin-bottom:8px}
+.readcta p{color:var(--ink-2);font-size:15px;margin-bottom:18px;max-width:480px;margin-left:auto;margin-right:auto}
+
+/* ---------- focus states (a11y) ---------- */
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px}
+.btn:focus-visible{outline-offset:3px}
+.tnode:focus-visible,.readcard:focus-visible,.pitem:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+
+/* ---------- resume / momentum strip ---------- */
+.resume{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:13px 16px;margin-top:16px;box-shadow:var(--shadow-s)}
+.resume .rk{width:44px;height:44px;border-radius:12px;background:var(--aurora-soft);display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex:none}
+.resume .rmeta{flex:1;font-size:13px;color:var(--muted);line-height:1.5}
+.resume .rmeta b{color:var(--ink-2);font-weight:600}
+.resume .rmeta .nx{color:var(--primary);font-weight:600}
+.freenote{text-align:center;font-size:12.5px;color:var(--muted);margin-top:12px}
+
+/* ---------- filled Eval Plan ---------- */
+.plandoc{margin-top:10px}
+.psec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:12px 0;box-shadow:var(--shadow-s)}
+.psec.empty{background:var(--bg-2);box-shadow:none;border-style:dashed}
+.psec .ph{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.psec .pn{width:26px;height:26px;border-radius:8px;background:var(--primary-soft);color:var(--primary);
+  font-family:var(--serif);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+.psec.done .pn{background:var(--done);color:#fff}
+.psec h4{font-family:var(--serif);font-size:15px;font-weight:600}
+.psec .pday{margin-left:auto;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px}
+.psec .edit{font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;margin-left:10px}
+.qa{margin:9px 0}
+.qa .ql{font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:4px}
+.qa .qv{font-size:14px;color:var(--ink);white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);
+  border-radius:9px;padding:8px 11px;line-height:1.5}
+.qa .qv.blank{color:var(--muted);font-style:italic;background:transparent;border-style:dashed}
+.samplebar{display:flex;align-items:center;gap:12px;background:var(--flag-soft);border:1px solid var(--flag);
+  border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#7a4e0f}
+.samplebar b{color:#5f3d0b;font-weight:700}
+.samplebar .btn{margin-left:auto}
+
+/* ---------- print to PDF ---------- */
+@media print{
+  .appbar,.foot,.exportbar,.scrim,.drawer,.rbar,.samplebar,.crumbs,.modal-scrim{display:none!important}
+  body{background:#fff}
+  .view{max-width:100%;padding:0;animation:none}
+  .psec{box-shadow:none;break-inside:avoid;page-break-inside:avoid}
+}
+
+/* ---------- per-question sample-answer hint ---------- */
+.exercise label{position:relative}
+.qhint{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;
+  background:var(--primary-soft);color:var(--primary);font-size:10px;font-weight:700;font-style:normal;
+  font-family:var(--serif);cursor:help;position:relative;vertical-align:middle;margin-left:6px;user-select:none}
+.qhint:hover,.qhint:focus{background:var(--primary);color:#fff;outline:none}
+.qtip{position:absolute;left:50%;top:calc(100% + 9px);transform:translateX(-50%) translateY(4px);
+  width:300px;max-width:80vw;background:#13151c;color:#fff;border-radius:12px;padding:11px 13px;
+  font-family:var(--sans);font-weight:400;font-size:12.5px;line-height:1.5;white-space:pre-wrap;text-align:left;
+  box-shadow:0 12px 30px rgba(20,20,40,.28);opacity:0;pointer-events:none;transition:opacity .16s,transform .16s;z-index:30}
+.qtip .qth{display:block;font-family:var(--serif);font-weight:700;font-size:10.5px;letter-spacing:.6px;
+  text-transform:uppercase;color:#aab2ff;margin-bottom:5px}
+.qhint:hover .qtip,.qhint:focus .qtip,.qhint:focus-within .qtip{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.qtip::after{content:"";position:absolute;left:50%;bottom:100%;transform:translateX(-50%);
+  border:6px solid transparent;border-bottom-color:#13151c}
+.qtip::before{content:"";position:absolute;left:0;right:0;top:-12px;height:12px}
+.qp{display:block;white-space:pre-wrap}
+.qcopy{margin-top:10px;font-family:var(--sans);font-size:11.5px;font-weight:600;color:#fff;background:var(--primary);
+  border:none;border-radius:8px;padding:6px 12px;cursor:pointer}
+.qcopy:hover{background:var(--primary-d)}
+@media(max-width:560px){.qtip{left:0;transform:translateY(4px)}.qhint:hover .qtip,.qhint:focus .qtip,.qhint:focus-within .qtip{transform:translateY(0)}
+  .qtip::after{left:20px}}
+
+/* ---------- email capture ---------- */
+.capture{display:flex;flex-direction:column;gap:8px;margin:8px 0 6px}
+.capture input{flex:1;border:1px solid var(--line-2);border-radius:11px;padding:11px 13px;
+  font-family:inherit;font-size:14px;background:var(--bg);color:var(--ink)}
+.capture input:focus{outline:none;border-color:var(--primary);background:#fff}
+.capture .btn{width:100%}
+.consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--ink-2);text-align:left;margin:6px 2px;line-height:1.45}
+.consent input{margin-top:2px;flex:none}
+.cprivacy{font-size:11.5px;color:var(--muted);margin:2px 2px 0;text-align:left}
+.signup-skip{display:inline-block;margin-top:14px;font-size:13px;color:var(--muted);cursor:pointer;font-weight:600}
+.signup-skip:hover{color:var(--ink)}
+.emaillink{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:600;color:var(--primary);background:none;cursor:pointer}
+.emaillink:hover{color:var(--primary-d)}
+.subbadge{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:600;color:var(--done)}
+
+/* ---------- author card ---------- */
+.authorwrap{max-width:920px;margin:0 auto;padding:26px 18px 0}
+.authorcard{display:flex;gap:18px;align-items:center;background:var(--aurora-soft);border:1px solid var(--line);
+  border-radius:20px;padding:20px 22px}
+.aphoto-wrap{position:relative;width:64px;height:64px;flex:none}
+.amono{position:absolute;inset:0;border-radius:50%;background:var(--aurora);color:#fff;display:flex;align-items:center;
+  justify-content:center;font-family:var(--serif);font-weight:700;font-size:20px}
+img.aphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;border:2px solid #fff;
+  box-shadow:var(--shadow-s)}
+.abody{flex:1;min-width:0}
+.aintro{font-size:14.5px;color:var(--ink-2);line-height:1.55;margin-bottom:14px}
+.aintro b{color:var(--ink);font-weight:600}
+.abtns{display:flex;gap:10px;flex-wrap:wrap}
+.abtns .btn{font-size:13.5px;padding:11px 16px;text-decoration:none}
+.abtns .btn.ghost{background:#fff}
+@media(max-width:560px){.authorcard{flex-direction:column;text-align:center}.abtns{justify-content:center}}
+
+/* ---------- collaboration strip ---------- */
+.collabstrip{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);
+  border-radius:16px;padding:13px 18px;margin-top:12px}
+.collabstrip .cmark{display:inline-flex;align-items:center;gap:6px;font-family:var(--serif);font-weight:700;
+  font-size:13px;color:#062d20;background:#34d399;border-radius:9px;padding:7px 12px;flex:none;letter-spacing:.2px}
+.collabstrip .cmark svg{width:14px;height:14px}
+.collabstrip .ctext{flex:1;font-size:13px;color:var(--muted);line-height:1.5;min-width:0}
+.collabstrip .ctext b{color:var(--ink-2);font-weight:600}
+.collabstrip .btn{flex:none;font-size:13px;padding:10px 15px;text-decoration:none;background:#fff}
+@media(max-width:560px){.collabstrip{flex-direction:column;text-align:center}}
+.foot a.memo{color:#0f766e;font-weight:600;text-decoration:none}
+.foot a.memo:hover{color:#0b5e57;text-decoration:underline}
+.foot a.memo .ext{font-weight:700}
+
+/* ---------- auth chip ---------- */
+.authchip{display:inline-flex}
+.authchip .who{font-size:12px;font-weight:600;color:var(--primary);background:var(--primary-soft);border:none;
+  border-radius:999px;padding:6px 11px;cursor:pointer;font-family:inherit}
+@media(max-width:560px){.authchip{display:none}}
+/* ---------- certificate ---------- */
+.cert{background:#fff;border:1px solid var(--line);border-radius:22px;padding:44px 40px;text-align:center;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;margin-top:8px}
+.cert::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:var(--aurora)}
+.cert-top{font-family:var(--serif);font-weight:700;font-size:14px;color:var(--muted);letter-spacing:.4px;
+  margin-bottom:22px;display:flex;align-items:center;justify-content:center;gap:8px}
+.cert-top .cert-mk{width:24px;height:24px;border-radius:7px;background:var(--aurora);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.cert-kick{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.cert-name{font-family:var(--serif);font-weight:700;font-size:42px;color:var(--primary);margin:10px 0 8px;line-height:1.1}
+.cert-body{font-size:15px;color:var(--ink-2);max-width:520px;margin:0 auto 26px;line-height:1.6}
+.cert-foot{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px solid var(--line);
+  padding-top:16px;gap:12px;flex-wrap:wrap}
+@media(max-width:560px){.cert{padding:30px 22px}.cert-name{font-size:30px}.cert-foot{flex-direction:column;text-align:center;gap:4px}}
 </style>
 </head>
 <body>
+<div class="rbar" id="rbar"></div>
 
 <!-- APP BAR -->
 <div class="appbar">
   <div class="in">
-    <div class="brand" onclick="go('home')"><span class="mk">◇</span> AI Evals Playbook</div>
+    <div class="brand" onclick="go('home')"><span class="mk">◇</span><span class="bt"> AI Evals Playbook</span></div>
+    <div class="modetog" role="tablist" aria-label="View mode">
+      <button class="mt active" id="tog-trail" onclick="go('home')">Trail</button>
+      <button class="mt" id="tog-read" onclick="go('read')">Read</button>
+    </div>
     <div class="spacer"></div>
     <span class="streak" id="streak">🔥 0</span>
     <div class="prog-mini"><div class="track"><i id="progbar"></i></div><span id="progtxt">0/10</span></div>
+    <span id="authchip" class="authchip"></span>
     <button class="gloss-btn" onclick="openGloss()">Glossary</button>
   </div>
 </div>
@@ -231,11 +451,594 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
   <div class="modal" id="modalBody"></div>
 </div>
 
-<div class="foot">
-  A free resource · <b>The AI Evals Playbook</b> by Priyanka Das · The Outcome Memo<br>
-  Concepts credited to Hamel Husain &amp; Shreya Shankar and the AI-evals community. No coding required.
+<!-- ABOUT THE AUTHOR -->
+<div class="authorwrap"><div class="authorcard">
+  <div class="aphoto-wrap">
+    <div class="amono" aria-hidden="true">PD</div>
+    <img class="aphoto" src="https://buildwithpriyanka.com/priyanka-photo.jpg" alt="Priyanka Das"
+         loading="lazy" onerror="this.style.display='none'">
+  </div>
+  <div class="abody">
+    <p class="aintro"><b>Hi, I'm Priyanka.</b> I'm an AI product manager, and I write about building AI that
+      ships, scales, and survives a regulator. If this was useful, there's more:</p>
+    <div class="abtns">
+      <a class="btn" href="https://theoutcomememo.substack.com" target="_blank" rel="noopener">Subscribe to The Outcome Memo →</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/pmpriyanka/" target="_blank" rel="noopener">Connect on LinkedIn →</a>
+    </div>
+  </div>
+</div>
+  <div class="collabstrip">
+    <span class="cmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>PrepOS</span>
+    <p class="ctext"><b>In collaboration with PrepOS</b> — free, adaptive PM interview prep that runs in your
+      browser. If evals are the job, PrepOS is the interview.</p>
+    <a class="btn ghost" href="https://pmprepos.com" target="_blank" rel="noopener">Try PrepOS →</a>
+  </div>
 </div>
 
+<div class="foot">
+  A free resource · <b>The AI Evals Playbook</b> by Priyanka Das · <a class="memo" href="https://theoutcomememo.substack.com/" target="_blank" rel="noopener">The Outcome Memo <span class="ext">↗</span></a> · in collaboration with <a href="https://pmprepos.com" target="_blank" rel="noopener">PrepOS</a><br>
+  Concepts credited to Hamel Husain &amp; Shreya Shankar and the AI PM community. No coding required.
+</div>
+
+<!-- STUDY NOTES SOURCE (rendered in-app by renderRead) -->
+<div id="readsrc" hidden>
+<p><em>The whole story, start to finish. Read it like a book, not a checklist.</em></p>
+<blockquote>
+<p><strong>How this differs from the course.</strong> The <a onclick="go('home')" style="cursor:pointer">10-day course</a> is a training plan — a
+single idea and a single exercise each day, worked <em>on your own feature</em>. These notes cover the
+same ground as one continuous read: roughly 35 minutes, nothing to fill in. Reach for this when
+you want the <em>reasoning</em> and the overall shape in one sitting; then go <em>practice</em> it, a day at a
+time, in the course. Any unfamiliar word is defined plainly in <a onclick="openGloss()" style="cursor:pointer"><code>GLOSSARY.md</code></a>.</p>
+<p>One feature travels with us the entire way — a customer-support <strong>refund assistant</strong> — so you can
+watch it move from <em>"seems okay"</em> to <em>measured, trusted, and steadily improving.</em> One story,
+eleven stops.</p>
+</blockquote>
+<hr />
+<h2>1. The trap that catches almost everyone</h2>
+<p>Imagine a product manager who's just launched an AI assistant for refund questions. It's the first
+week. She tries a handful of prompts, the replies look reasonable, and she reports back to the
+team that quality is in good shape. Heads nod. The feature stays live.</p>
+<p>A month and a half later, the support queue is on fire. The assistant has been telling customers
+about a <em>"30-day refund window"</em> that the business simply doesn't have — and it's been doing so
+confidently, again and again. When leadership asks the natural question — <em>just how good is this
+thing?</em> — there's no real answer to give. No measurements were ever taken. There was only an
+impression.</p>
+<p>That impression has a name: the <strong>vibe-check</strong>. You open the product, prod it a few times, and
+conclude it feels fine. There's nothing shameful about it — it's where everyone begins, and as a
+first glance it's perfectly reasonable. What it <em>can't</em> do is the problem. It doesn't stretch to
+scale (your assistant fields thousands of conversations; you sampled a few). It can't spot a slow
+decline (on the day quality starts slipping, your gut still says fine). And it isn't transferable —
+an instinct in your head isn't something a colleague can pick up and run.</p>
+<p>The distance between <em>"it feels good"</em> and <em>"here is precisely how good it is, and here's what's
+going wrong"</em> — that distance is the entire subject of these notes. Bridging it is a discipline, and
+the discipline has a name.</p>
+<hr />
+<h2>2. What an eval actually is — and why it's <em>your</em> job now</h2>
+<p>An <strong>eval</strong> is a repeatable method for judging whether your AI's output is any good. <em>Repeatable</em> is
+the load-bearing word: run it tomorrow, or hand it to a teammate, and you get the same verdict — and
+you can stand behind it in front of other people. That's the whole gap from a vibe-check. A
+vibe-check is a private hunch; an eval is a result you'd put in front of leadership.</p>
+<p>The habit that separates the people who are good at this is borrowed straight from quality
+assurance: settle on what <em>good</em> means <strong>before</strong> you go looking, and then measure against that
+definition — never the reverse.</p>
+<p>What surprises a lot of teams is that this lands on the <em>product</em> desk now, not only the engineering
+one. Old-school software was deterministic: the spec promised a particular behavior, the code
+delivered exactly that behavior, and you could check it off. AI breaks that contract. Feed it the
+same input twice and the output can differ, and "good" turns into a matter of <em>judgment</em> — was the
+tone right, was it genuinely helpful, was it correct, was it safe? Someone has to own that
+judgment, commit it to paper, and defend it, and in most teams the person closest to the user and
+the business is the one positioned to do so. That's why, in just a couple of years, evals went from
+a niche engineering chore to the headline skill for people who build with AI.</p>
+<p>It helps to know where you actually sit. Modern AI stacks up in three layers, and only one of them
+is yours to worry about:</p>
+<ul>
+<li><strong>Pre-training</strong> — creating a foundation model from nothing. A budget in the hundreds of millions.
+  Not your table.</li>
+<li><strong>Post-training</strong> — the big labs shaping a model to follow instructions and stay safe. Also not
+  yours.</li>
+<li><strong>The application layer</strong> — <em>you</em>, taking a ready-made model (Claude, GPT) and wiring it into one
+  specific feature. <strong>This is your home turf.</strong> And here's what makes evals unavoidable: no public
+  leaderboard exists for "our refund assistant." Nobody on earth has measured <em>your</em> product except
+  you. Defining good for it falls to you, because it can't fall to anyone else.</li>
+</ul>
+<p>Once evals exist, they quietly repay you three ways. They <strong>monitor</strong>, tracking quality over time so
+a decline shows up on your dashboard before it shows up in your inbox. They act as <strong>guardrails</strong>,
+intercepting a bad output in the moment and blocking or retrying it. And they fuel <strong>improvement</strong>,
+pointing at <em>what</em> to change so each edit genuinely advances things instead of just rearranging
+them. Monitor, guard, improve — hold those three loosely in mind; everything ahead is in service of
+one of them.</p>
+<p>So that's the destination. The remainder of these notes is the route there: study your data, locate
+what's failing, convert "good" into a figure, confirm that figure is trustworthy, and keep the whole
+arrangement honest as time passes. It opens with a map.</p>
+<hr />
+<h2>3. The three places AI breaks</h2>
+<p>When the refund assistant produces a poor answer, <em>what went wrong?</em> It seems like there could be a
+hundred causes. There are really only three, and pinning the right one down is most of the cure.
+This is <strong>Shreya Shankar's Three Gulfs</strong> framework — where a "gulf" is nothing more than a gap
+between two things that ought to be in step.</p>
+<p>The <strong>Gulf of Comprehension</strong> sits between <em>you and your data</em>: the distance between the inputs and
+outputs you <em>picture</em> and the ones that <em>actually arrive</em>. In your head the questions are tidy and
+well-formed. In the wild they're riddled with typos, pasted-in email chains, three languages in a
+single message, the occasional attached PDF. You can't assess what you've never laid eyes on — which
+is exactly why the very next move is to go and read your data.</p>
+<p>The <strong>Gulf of Specification</strong> sits between <em>you and the prompt</em>: the distance between what you <em>had
+in mind</em> and what you genuinely <em>instructed the AI to do</em>. Plain language leaks. "Be helpful and
+concise" never once said "and only ever state policies from our approved list." Every assumption you
+left unspoken is an opening the model will stroll through. Most "why is the AI so dim" moments are,
+on inspection, "the instructions were fuzzy" moments.</p>
+<p>The <strong>Gulf of Generalization</strong> sits between <em>a few examples and the real, messy world</em>: the distance
+between "passes my ten test cases" and "holds up across the five hundred ways real people phrase
+things." The assistant aces your demo, so out it goes — and then it meets the long tail of rare,
+odd, adversarial inputs and fails quietly on some fraction of them. This is the gulf that stays
+hidden, because a demo never wanders near it.</p>
+<p>The map earns its keep the moment something breaks, because it swaps a useless sentence for a useful
+one. Instead of <em>"the AI is broken,"</em> you ask <em>"which gulf is this?"</em> Comprehension trouble? Go read
+more real data. Specification trouble? Sharpen the prompt. Generalization trouble? Widen the test
+set until it covers the awkward cases. When the assistant conjures that 30-day window, it's mostly a
+<em>specification</em> gulf — nothing in the prompt forbade guessing — with a streak of <em>generalization</em>,
+since it only slips on the less common questions. Plenty of real failures straddle more than one
+gulf, and that's fine. What you've gained is three precise questions where you used to have one vague
+gripe.</p>
+<p>Notice that all three remedies open with the same instruction: <em>go and look at your data.</em> So let's
+do precisely that — because it turns out to be the single most powerful item on the whole list.</p>
+<hr />
+<h2>4. The one skill that beats everything: look at your data</h2>
+<p>Here's a true and faintly awkward picture of how teams actually behave. A group burns two weeks
+debating which pricey eval <em>platform</em> to purchase. All the while, the real defect — the assistant
+mangles anything that mentions "chargeback" — was sitting in plain view in the first ten real
+conversations. Nobody had opened them.</p>
+<p>The highest-return move in all of evals is also the least glamorous: <strong>read the outputs your AI is
+actually producing.</strong> Not dashboards, not roll-up scores — the raw exchanges. The practitioners who
+teach this craft to engineers at the major labs repeat it endlessly, and it still sounds too plain
+to matter. It is anything but.</p>
+<p>The thing you read is a <strong>trace</strong>: a single real record of the AI doing its job — the input it
+received, the output it returned, and (for richer features) the steps it took along the way. The
+craft of working through a batch of traces and registering what's truly going on is <strong>error
+analysis</strong>, and its opening move is <strong>open coding</strong>. Don't be put off by the term: "coding" here
+means <em>tagging</em>, with no connection to programming, and "open" means you walk in with no ready-made
+buckets — you simply read and respond.</p>
+<p>The recipe is short enough to hold in one breath. Gather fifteen to twenty <em>genuine</em> outputs — from
+production or honest hands-on use, not the three flattering ones from the demo. Read each one
+properly, and jot <strong>one brief, plain note</strong>: what worked, what didn't, anything that caught you off
+guard. Be concrete. Not "bad answer," but <em>"quoted a 30-day window we don't offer"</em> or <em>"accurate,
+but the tone came off cold and mechanical."</em> Don't repair anything. Don't sort into groups yet. Just
+look clearly.</p>
+<p>Five rows of this on the refund assistant already hand you most of the picture:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>input</th>
+<th>output</th>
+<th>note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"can I get a refund after 3 weeks?"</td>
+<td>"Yes! You have 30 days."</td>
+<td>❌ invented a 30-day window we don't have</td>
+</tr>
+<tr>
+<td>"REFUND NOW or I'm calling my lawyer"</td>
+<td>"Sorry to hear that. Our policy is…"</td>
+<td>❌ legal threat — should hand off to a person, didn't</td>
+</tr>
+<tr>
+<td>"how do refunds work"</td>
+<td>"Refunds go to your original payment in 5–7 days."</td>
+<td>✅ accurate and clear</td>
+</tr>
+<tr>
+<td>"merci, comment ça marche?"</td>
+<td>"I can help! Refunds are…" <em>(in English)</em></td>
+<td>⚠️ replied in English to a French question</td>
+</tr>
+<tr>
+<td>"[pastes 40-line email thread]"</td>
+<td>"Could you clarify your question?"</td>
+<td>⚠️ stumbled on a messy real-world input</td>
+</tr>
+</tbody>
+</table></div>
+<p>See how much falls out of five rows: a fabrication problem, a missing hand-off, a language gap, a
+messiness gap. <em>None</em> of it was legible from a dashboard. This is also you crossing the Gulf of
+Comprehension live — your imagination, it turns out, was a far feebler test set than reality.
+Two small habits keep it painless: work in a spreadsheet (one row per output, columns for input,
+output, and your note — that's the entire toolkit), and pointedly read the <em>uncomfortable</em> ones. The
+irritated users, the strange inputs, the sprawling messages. "Thanks, that sorted it" teaches you
+nothing; the messy cases teach you everything.</p>
+<p>Now you're holding a heap of notes. By itself it feels like static. The next move turns it into a
+plan.</p>
+<hr />
+<h2>5. From a pile of notes to a ranked list of named problems</h2>
+<p>Stare at those notes for a moment and a shape emerges. <em>"Invented a 30-day window," "made up a
+return address," "guessed at a discount"</em> — that isn't three problems. It's one problem in three
+disguises: the assistant <strong>fabricates policy.</strong> Name it once and you can suddenly count it, measure
+it, and go after it. That step — from loose notes to named patterns — is the back half of error
+analysis, sometimes called <strong>axial coding.</strong> It's where the haze hardens into a to-do list.</p>
+<p>The method is just <em>group, name, count, rank.</em> Cluster the notes that are secretly the same
+underlying fault. Name each cluster as a <strong>behavior</strong>, and be specific about it — <em>"fabricates a
+policy that doesn't exist," "fails to escalate legal threats"</em> — rather than mush like <em>"accuracy
+issues"</em> or <em>"sometimes the tone's off,"</em> which are too soft to measure. Tally how often each one
+turned up in your sample. Then order them by <strong>frequency × severity</strong>. You'll usually settle on three
+to six <strong>failure modes</strong> — a named, recurring way the AI goes wrong. That range is the sweet spot:
+more and you're shaving too fine, fewer and you're probably still being vague.</p>
+<p>Two judgment calls live here. The first is the <strong>Pareto move</strong>: nearly always, one or two failure
+modes account for the bulk of the pain. You don't chase them all — you tackle the top one or two,
+ship, and re-measure. That's how evals become forward motion instead of a bottomless backlog. The
+second is that <strong>severity carries as much weight as frequency.</strong> A fault that strikes 2% of the time
+but exposes you to a lawsuit (skipping the hand-off on a legal threat) outranks a cosmetic tone
+wobble that strikes 30% of the time. Rank by how often <em>multiplied by</em> how much it hurts, and lean on
+your product judgment for the "how much" — that judgment is exactly the thing you bring that an
+engineer might not.</p>
+<p>For the refund assistant, twenty notes condense into something like this:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Failure mode</th>
+<th>Count (/20)</th>
+<th>Severity</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Fabricates a policy that doesn't exist</td>
+<td>6</td>
+<td>High</td>
+<td>🔥 #1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Fails to escalate legal/angry cases</td>
+<td>3</td>
+<td>High</td>
+<td>🔥 #2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Replies in the wrong language</td>
+<td>2</td>
+<td>Medium</td>
+<td>#3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Stumbles on long/messy pasted input</td>
+<td>2</td>
+<td>Low</td>
+<td>later</td>
+</tr>
+<tr>
+<td>—</td>
+<td>(7 outputs were perfectly fine ✅)</td>
+<td>7</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>That's a plan, not a mood. (You can drop the notes into Claude or ChatGPT and have it sketch the
+grouping in a couple of minutes — but the final list is <em>yours</em>. The model is a quick sorter; it
+hasn't sat with the data the way you have.) "Fabricates policy" is your #1 — six hits, high stakes.
+So that's the one you'll turn into a real measurement next.</p>
+<hr />
+<h2>6. Turning "good" into a number — the turning point</h2>
+<p>This is the pivot of the whole story. Until now you've been <em>observing</em>; from here on you're
+<em>measuring</em>. And the very first thing you measure exposes why most quality arguments go in circles.</p>
+<p>Two colleagues read the same refund-assistant reply. One scores it "7 out of 10." The other says
+"4." They go back and forth for ten minutes, and neither is actually wrong — because "7/10" carries
+no shared meaning. It's a gut feeling dressed up as a figure. Now flip the question. Suppose the
+standard is: <em>"FAIL if the reply states any refund policy that isn't on our approved list."</em> Both
+colleagues look. Both say <strong>FAIL.</strong> Argument over. That's the entire force of a good <strong>rubric</strong> — a
+written rule that calls pass-or-fail on <em>one</em> thing you care about.</p>
+<p>The single most useful tip in these notes is this: <strong>keep it binary. Pass or fail. Not a 1–10
+scale.</strong> It feels like a step down. It's the opposite, for three reasons. First, 1–10 scores are
+<em>counterfeit precision</em> — nobody can reliably separate a 6 from a 7, so the disagreement looks like
+measurement but is really just noise. Second, binary <em>forces a crisp definition</em> — to commit to pass
+or fail you have to spell out exactly what failure <em>is</em>, and that act of spelling-out is the
+valuable thinking. Third, binary is <em>actionable</em>: "30% fail this check" tells you exactly what to go
+fix, whereas "averaging 6.4 out of 10" tells you nothing you can act on. A good rubric is sharp
+enough that two people grade the same output identically — so try yours on yesterday's examples, and
+if you and a colleague split, the rubric's still too loose. Tighten it. Write one rubric per failure
+mode, beginning with your #1.</p>
+<p>A rubric needs something to run against, and that's an <strong>eval dataset</strong> — a test set — which is
+simply a set of inputs you run the AI on to gauge quality. Begin <em>small</em>: three examples is a fair
+start, ten is comfortable, and it grows from there. Build it from two directions at once. Pull
+<strong>real inputs</strong> that trip your failure mode (the traces you read earlier are pure gold), and
+<strong>generate</strong> more by asking an AI: <em>"Give me 30 varied customer refund questions — some angry, some
+not in English, some vague."</em> That generated batch is the fast route to covering the messy long tail
+— which, you'll remember, is the Gulf of Generalization. And cover the hard cases <em>deliberately</em>: a
+test set made only of easy questions will always look terrific and teach you nothing.</p>
+<p>Beneath all of it — every eval you'll ever run, however elaborate — sits one simple five-step loop:</p>
+<pre><code>1. DRAFT the thing you're testing (a prompt)
+2. CREATE a test set that mirrors reality
+3. RUN the AI over each case → collect the outputs
+4. GRADE each output against your rubric (pass/fail)
+5. CHANGE one thing &amp; REPEAT → did the score climb?
+</code></pre>
+<p>Step 5 is where the magic lives. The score becomes a <strong>fixed baseline</strong>: adjust the prompt, run it
+again, and <em>watch</em> whether you helped or hurt instead of guessing. In practice, run the assistant
+over ten cases, mark each against the fabrication rubric, and you land on — say — <strong>6 out of 10.</strong>
+That 60% is your baseline. When you tune the prompt next week and it reaches 9 out of 10, you'll
+<em>know</em> you improved it. And none of this needs special tooling to begin: a spreadsheet of test cases
+with a pass/fail column is already a real eval. The one snag is that grading ten cases by hand is
+fine, while grading ten thousand isn't. So the grading has to start running on its own.</p>
+<hr />
+<h2>7. Who does the grading: code checks vs. an AI judge</h2>
+<p>There are exactly two ways to automate grading, and the skill is matching the right one to each
+failure mode. (You won't <em>build</em> either — but you'll decide which fits and brief your team, and that
+call is genuinely yours.)</p>
+<p>A <strong>code evaluator</strong> is a plain, deterministic rule that checks something with an unambiguous yes/no
+answer — no opinion involved. It either happened or it didn't. Reach for it on the rule-shaped
+things: a mandatory disclaimer is present, the output is a properly formed date, a forbidden word is
+absent, the system really did route to a human when it was supposed to. On the refund assistant: if
+any reply that quotes a refund <em>amount</em> must carry the line <em>"final amounts are confirmed by our
+team,"</em> a code evaluator simply checks whether that exact sentence is there. It's quick, essentially
+free, and never overlooks what you told it to watch — but it only ever catches <em>what you
+programmed.</em> It can't tell you whether a reply was <em>helpful.</em></p>
+<p>An <strong>LLM-as-judge</strong> puts an AI in the grader's seat for the <em>subjective</em> qualities — tone,
+helpfulness, empathy, clarity, whether something honors a policy in spirit — assessing them the way
+a human reviewer would. Rather than matching keywords, it reads the output and reasons about whether
+it's any good. Reach for it on "is the tone calm and professional?", "did it genuinely answer the
+question?", "does this respect our refund policy in spirit?" It's flexible, it notices nuance, and
+it scales to thousands of outputs — but there's a catch we'll handle next: it's an AI grading an AI,
+so you have to prove it lines up with humans before you lean on it.</p>
+<p>The two aren't competitors; they're <strong>layers.</strong> You run both, on different checks — code evaluators
+for the objective, compliance-flavoured rules, LLM-judges for the subjective quality calls. The
+rule of thumb writes itself: <em>objective and rule-shaped → code; subjective and judgment-shaped →
+LLM-judge.</em> Laid across the refund assistant's failure modes, the split is clean:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Failure mode</th>
+<th>Grader</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fabricates a non-existent policy</td>
+<td><strong>LLM-judge</strong></td>
+<td>Must weigh claims against the approved policy <em>by meaning</em></td>
+</tr>
+<tr>
+<td>Fails to escalate legal/angry cases</td>
+<td><strong>Code eval</strong></td>
+<td>Objective: did the hand-off fire? Yes/no</td>
+</tr>
+<tr>
+<td>Replies in the wrong language</td>
+<td><strong>Code eval</strong></td>
+<td>Objective: input language vs. output language</td>
+</tr>
+<tr>
+<td>Robotic / cold tone</td>
+<td><strong>LLM-judge</strong></td>
+<td>A pure judgment call</td>
+</tr>
+</tbody>
+</table></div>
+<p>And an LLM-judge is less mysterious than it sounds — it's just a carefully written prompt. Name the
+one thing to judge (keep it binary), give it the rule (your rubric), and ask for a verdict plus a
+reason: <em>"You're grading a support reply. It PASSES only if every refund policy it names is on this
+approved list: [list]. Otherwise FAIL. Customer message: {input}. Reply: {output}. Answer PASS or
+FAIL, then one sentence saying why."</em> That's a working LLM-judge — no code, just a clear prompt and
+your rubric. Which raises the obvious, slightly uneasy question: can you really trust an AI to grade
+your AI?</p>
+<hr />
+<h2>8. Can you trust the judge?</h2>
+<p>Say your LLM-judge reports the assistant fabricating a policy 8% of the time. Reassuring — unless the
+judge itself is off. Perhaps it's overlooking half the genuine fabrications. Perhaps it's flagging
+blameless answers. If your ruler is warped, every figure you quote from it is warped too. So before
+you lean on an automated grader at scale, you do one modest thing: <strong>measure it against a human.</strong>
+And the human is you.</p>
+<p>The method is short. Take a sample of outputs — twenty is ample to begin. Grade each one yourself, by
+hand, pass or fail, using your rubric; <em>that</em> is your <strong>ground truth</strong>, the correct labels as decided
+by a person. Then set the LLM-judge loose on the same twenty. Line them up. Where do you agree? Where
+do you part ways? Two figures capture how good the judge is, and although they sound technical
+they're really just common sense.</p>
+<p><strong>Precision</strong> asks: <em>are the alarms real?</em> — of the failures the judge flagged, what share were
+actually failures? Weak precision means the judge cries wolf: it flags clean answers, you burn time
+chasing phantoms, and people stop believing the eval. <strong>Recall</strong> asks: <em>is anything slipping past?</em>
+— of all the failures that genuinely exist, what share did the judge catch? Weak recall means silent
+misses: the dashboard reads "97% good" while customers keep hitting failures it never noticed. Recall
+is the more dangerous of the two, precisely because its misses are invisible. The whole thing fits in
+a small grid:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th></th>
+<th>Judge says FAIL</th>
+<th>Judge says PASS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Really a fail</strong></td>
+<td>✅ caught it</td>
+<td>❌ missed it (hurts recall)</td>
+</tr>
+<tr>
+<td><strong>Really fine</strong></td>
+<td>❌ false alarm (hurts precision)</td>
+<td>✅ correct</td>
+</tr>
+</tbody>
+</table></div>
+<p>You want both running high — catch the genuine failures <em>and</em> don't cry wolf. Walk it through once
+with numbers: you hand-label twenty answers and find 5 are real fabrications, 15 are clean. The judge
+flags 6. Of those 6, four were real and two were false alarms → <strong>precision = 4/6 ≈ 67%.</strong> Of the 5
+real fabrications, it caught four and missed one → <strong>recall = 4/5 = 80%.</strong> Read: recall's respectable,
+precision's shaky. You don't bin the judge — you <em>coach</em> it, the way you'd coach a new reviewer:
+tighten the rule in its prompt, drop in a couple of worked pass/fail examples so it calibrates, and
+re-test against your twenty. Run it again, precision climbs past 90%, and <em>now</em> you let it loose on
+the full traffic. (You don't need exact arithmetic either — "it agreed with me 17 times out of 20,
+and the misses were all false alarms" is a real, useful read.)</p>
+<p>When a judge agrees with humans on both counts, something quietly excellent has happened: you've
+effectively <em>duplicated a trusted reviewer</em>, one that keeps grading thousands of outputs while you
+sleep. That's the prize. And the technique outlasts AI — precision and recall are how you weigh <em>any</em>
+automated check against human judgment. Learn it once, keep it forever. An unvalidated judge, by
+contrast, isn't really a measurement at all; it's a second opinion you haven't yet earned the right
+to trust.</p>
+<p>Everything so far has quietly assumed the simplest possible feature: a question goes in, an answer
+comes out. Many real features are richer than that — and they bury their failures in places the final
+answer never reveals.</p>
+<hr />
+<h2>9. The trickier features: check the path, not just the destination</h2>
+<p>Your real feature might do more than answer. It might <strong>look things up</strong> before replying (that's
+<strong>RAG</strong>). It might <strong>take actions</strong> — query the order system, issue the refund, email the customer
+(that's an <strong>agent</strong>). It might <strong>hold a conversation</strong> across many turns (<strong>multi-turn</strong>). For all
+three, grading the final answer alone isn't enough, because the answer can be right by luck or wrong
+for a reason you'll never spot unless you inspect the steps.</p>
+<p><strong>When it looks things up (RAG),</strong> ask <em>did it retrieve the right material?</em> A RAG answer can fail in
+two completely separate ways: retrieval misfired (it pulled the wrong documents, or nothing), or
+generation misfired (the right documents were in hand and the reply was still poor). So there are
+two questions rather than one — <em>did it surface the correct source,</em> and, having surfaced it, <em>did
+it answer faithfully from that source?</em> A wrong reply traced to a <em>missing</em> document needs a
+completely different remedy than one traced to a <em>present</em> document. The PM takeaway: keep asking
+"which documents did it actually pull?" — most RAG breakdowns are retrieval breakdowns in a
+generation costume.</p>
+<p><strong>When it takes steps (an agent),</strong> ask <em>did it follow a sensible path?</em> An agent doesn't merely
+answer; it plans, selects tools, makes calls, and strings the steps together — and that ordered
+chain of steps is its <strong>trajectory.</strong> Here a correct final answer can disguise a broken path: it
+issued the right refund, but en route it opened the <em>wrong</em> customer's record and simply got away
+with it. So you weigh the trajectory itself — did it reach for the right tools, move through
+reasonable steps in a reasonable order, and avoid harmful or wasteful moves like firing off a double
+refund? A correct answer arrived at by a reckless route will, given time, arrive at a wrong and
+expensive one.</p>
+<p><strong>When it holds a conversation (multi-turn),</strong> ask <em>does quality survive turn 5?</em> Most demos test
+only the opening reply; real people go back and forth. Does the assistant recall what was said three
+turns ago, stay consistent rather than contradict itself, and hold the policy line as the user
+rephrases and pushes? Failures love to hide in turn 4.</p>
+<p>You don't need to <em>build</em> trajectory tracking or retrieval logging. Your job is to <strong>know what to ask
+for</strong>: "Which documents did the model pull?" "Can we record the sequence of steps it took?" "Can we
+exercise a five-turn exchange in testing, not just the first reply?" Posing those questions is
+precisely what a sharp AI PM contributes. (And if your feature really is plain question-in,
+answer-out, then realizing you <em>don't</em> need these checks is itself a useful, valid conclusion.)</p>
+<p>By now you've built something real. The last danger is that it quietly stops working once everyone's
+attention has moved on.</p>
+<hr />
+<h2>10. Keeping it alive: regressions and drift</h2>
+<p>Here's the cruel twist. You did all the work — surfaced the failure modes, wrote the rubrics,
+validated the judge. Quality's good. Three months on it's bad again, and nobody noticed until the
+customers did. Two things always happen to AI products over time, and an eval you run <em>once</em> catches
+neither. An eval that runs <em>on a schedule</em> catches both.</p>
+<p>The first is <strong>regression</strong>: a prompt edit or a model swap quietly knocks over something that had
+been working fine. The defense is a <strong>quality gate.</strong> Whenever the prompt or model is touched, the
+test set runs before anything else, and the fresh score is held up against the last one; if it
+slipped, the change stays on the bench until that's put right. This is where <strong>prompt versioning</strong>
+pays off: track the prompt as v1, v2, v3, and grade each against the <em>same</em> test set, so "is v3
+better than v2?" resolves to a number rather than a debate. The automated version of this is what
+engineers call a <strong>CI check</strong> — it fires on every change and blocks the bad ones — and you don't
+build it, you <em>ask</em> for it. Your one line: <em>"No prompt or model change ships until it clears our
+eval set — can we make that a hard requirement?"</em> That single sentence recasts you as the PM who
+heads off the fire drills rather than the one fighting them.</p>
+<p>The second is <strong>drift</strong>: nothing changes on your side, but the world moves, and quality slowly slides.
+Your inputs shift (new products, new slang, fresh edge cases your original test set never imagined),
+and the <em>model itself</em> can shift beneath you (vendors update models, and behavior changes with no
+notice — one widely cited study found a model's accuracy on a task swinging sharply between two
+versions a few months apart). The defense is cheap and humble: choose a cadence — weekly is a sound
+default — re-sample real production outputs, re-grade them, and watch the number over time. A gentle
+slide from 92% → 88% → 84% is drift, and you want to catch it as a soft trend on your own dashboard,
+not as a cliff your customers discover for you. Keep the test set fresh too — periodically swap in
+new real examples, because a test set frozen at launch gradually stops describing your actual
+product.</p>
+<p>And keep a human in the loop. The automated graders carry the bulk of the load, yet the best teams
+still read a few real traces by hand every week. It keeps your own judgment calibrated and surfaces
+the brand-new failure mode that nobody ever told the automated checks to watch for — which is really
+just the look-at-your-data habit from earlier, repeated forever in small doses. The whole routine
+fits in a breath: <em>check before every change, re-sample weekly, refresh the test set, and keep
+reading a few real outputs by hand.</em> Call it twenty minutes a week — the price of catching trouble
+yourself instead of hearing about it from a customer.</p>
+<p>There's one move left — the one that turns all this measurement into something the business genuinely
+cares about.</p>
+<hr />
+<h2>11. Closing the loop: improve it, then prove it</h2>
+<p>Here's what rarely gets said out loud: <strong>an eval that never changes the product is just costly
+diary-keeping.</strong> The score was never the point. A better product is the point — along with being able
+to demonstrate it to whoever controls the budget and the roadmap. Two moves shut the loop: first you
+<em>improve,</em> then you <em>make the case.</em></p>
+<p>To <strong>improve</strong>, aim that same five-step loop from earlier at your #1 failure mode — look at the
+failures, set a baseline, change one thing, re-measure, then keep it or roll it back. Your levers,
+cheapest first: <strong>fix the prompt</strong> (the most common and cheapest fix — <em>"only state policies from
+this list; if you're unsure, say you'll check"</em> kills off a lot of fabrication, and most
+Specification-gulf problems die right here); <strong>fix the inputs or retrieval</strong> (if it's a RAG feature
+pulling the wrong documents, repair retrieval before you blame the model); or <strong>change the
+architecture or model</strong> (add a guardrail, add an escalation step, or upgrade the model — the heavy
+lever, for when prompt fixes plateau). The discipline that makes you trustworthy is the same one from
+the start: change one thing, run the eval again, compare to baseline. Up? Keep it. Not? Revert and
+try the next idea. You've stopped guessing whether you helped — you can see it.</p>
+<p>To <strong>communicate</strong>, write a short <strong>eval report</strong> — aimed at stakeholders, not engineers. The same
+facts can land as "trust me, it's good" or as a tight, credible case that wins you resources, and the
+difference is five plain lines: <em>what we measured</em> (the feature and its top failure modes), <em>how good
+it is</em> (pass rates in plain numbers), <em>what's still failing</em> (honestly, the biggest remaining
+problem), <em>what we're doing about it</em> (the next fix and its expected effect), and <em>how we know it
+won't rot</em> (your cadence — the smoke detector from the previous section). For the refund assistant it
+reads like this:</p>
+<blockquote>
+<p><strong>Refund Assistant — Eval Report (this month)</strong>
+<strong>Measured:</strong> policy accuracy, escalation of legal/angry cases, language match.
+<strong>Quality:</strong> policy-accuracy check now passes <strong>91%</strong> (was 60% at the start of the month);
+escalation <strong>100%</strong>; language match <strong>96%</strong>.
+<strong>Still failing:</strong> ~9% of replies on rare product types still state an unverified policy.
+<strong>Next fix:</strong> add those product types to the approved-policy source; expect 91% → ~97%.
+<strong>How we keep it honest:</strong> 30-case eval gate on every prompt change; 50 real conversations
+re-graded weekly; test set refreshed monthly.</p>
+</blockquote>
+<p>Five lines. A busy executive grasps it in thirty seconds; a sceptical one can't find a hole to poke.
+Numbers and honesty beat adjectives every time. And the report does something larger than report: it
+shifts how leadership <em>sees</em> AI quality — from a black box they accept on faith into something a
+product person owns, measures, and steers. It's the artifact that gets your program funded rather
+than cut, and — not by coincidence — exactly the kind of document compliance and governance teams
+increasingly want as AI oversight tightens.</p>
+<hr />
+<h2>12. Where this leaves you</h2>
+<p>Walk back across the whole arc. You started where nearly everyone starts — opening the product,
+trying a few things, pronouncing it good. Then you gave that instinct a backbone. You learned what an
+eval really is and why owning it is now a product job. You got a map of the three places AI breaks.
+You did the unglamorous, decisive thing — <em>read your actual data</em> — and turned a heap of notes into a
+ranked list of named failure modes. You made "good" measurable with binary rubrics and a small test
+set, matched the right grader to each problem, and <em>proved</em> you could trust the AI judge using
+precision and recall. You learned to check the path and not just the destination on the trickier
+features. You built a habit that catches regressions and drift before customers do. And you closed
+the loop — turning results into a concrete fix and a five-line report that leaves you the person in
+the room whose read on quality everyone trusts.</p>
+<p><strong>In a breath:</strong> <em>Owning AI quality was never an engineering credential. It's four habits — read your
+data, measure what counts, show the measurement holds up, and keep it honest as time passes. That's
+the job, and it's yours now.</em></p>
+<p>When you're ready to do it for real — on <em>your</em> feature, a bite a day — start the
+<a onclick="go('home')" style="cursor:pointer">10-day course</a> at <a onclick="go('day',1)" style="cursor:pointer">Day 1</a>, and keep your work in the
+<a onclick="go('plan')" style="cursor:pointer">Eval Plan template</a>. Reading this through was the map. The course is the
+walk.</p>
+<hr />
+<h3>A note on sources, originality, and copyright</h3>
+<p>These notes are an <strong>original synthesis written for this playbook.</strong> They contain no verbatim text
+copied from any book, course, article, or other source — every sentence here was composed for these
+notes. What's borrowed is <em>ideas and terminology</em>, which are credited to the people who developed
+them; ideas and framework names aren't subject to copyright, and they're attributed here as a matter
+of good practice:</p>
+<ul>
+<li><strong>Hamel Husain &amp; Shreya Shankar</strong>, <em>Evals for AI Engineers</em> — error analysis (open and axial
+  coding, themselves rooted in long-standing qualitative-research practice), binary rubrics,
+  automated evaluators, RAG / agent / multi-turn evaluation, CI-style quality gates, and the
+  improvement loop. (<a href="https://hamel.dev/blog/posts/evals-faq/" target="_blank" rel="noopener">Hamel's LLM Evals FAQ</a>)</li>
+<li><strong>Shreya Shankar's Three Gulfs</strong> framework — Comprehension, Specification, Generalization (building
+  on Don Norman's gulfs of execution and evaluation, 1988).</li>
+<li><strong>LinkedIn Learning</strong> courses on a typical eval workflow, automated evals (code evaluators &amp;
+  LLM-as-judge, precision/recall for validating graders), and evaluation reports as stakeholder
+  artifacts.</li>
+<li><strong>Lenny's Newsletter</strong>, <a href="https://www.lennysnewsletter.com/p/why-ai-evals-are-the-hottest-new-skill" target="_blank" rel="noopener">Why AI evals are the hottest new skill</a>,
+  for the product framing.</li>
+</ul>
+<p>The running example — the refund assistant, its failure modes, the sample traces, the rubric, the
+numbers, and the report — is <strong>invented for this playbook</strong> and does not reproduce any example from
+the sources above.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ============================ DATA ============================ */
 const GLOSS = [
@@ -468,22 +1271,228 @@ const DAYS = [
 /* ============================ STATE ============================ */
 const KEY="evals_playbook_v1";
 let store = JSON.parse(localStorage.getItem(KEY) || '{"done":[],"answers":{}}');
+if(!store.answers) store.answers={}; if(!Array.isArray(store.done)) store.done=[];
+if(typeof store.streak!=='number') store.streak=0; if(!('lastDate' in store)) store.lastDate=null;
+if(typeof store.subscribed!=='boolean') store.subscribed=false; if(!('email' in store)) store.email=null; if(typeof store.askedEmail!=='boolean') store.askedEmail=false;
+/* ===== Backend: Supabase (passwordless magic-link auth + cross-device progress) =====
+   Project tuenevwxowndrprqrsnx (eu-north-1). Keys below are PUBLIC client keys.
+   SETUP (see design/BACKEND-SETUP.md): in the Supabase dashboard, set Authentication ->
+   URL Configuration -> Site URL + Redirect URLs to your deployed domain, and add a
+   production SMTP sender — otherwise magic-link emails won't reach users. */
+const SUPABASE_URL='https://tuenevwxowndrprqrsnx.supabase.co';
+const SUPABASE_KEY='sb_publishable_GaiDpg2WSGyzxrucFQfTyg_ZOk9vaCD';
+const SB=(window.supabase&&window.supabase.createClient)
+  ? window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})
+  : null;
+let USER=null, saveTimer=null;
+function authed(){ return !!USER; }
+
+function openSignup(){
+  document.getElementById('modalBody').innerHTML=`<div class="big">\u{1F4DD}</div><h2>Start free — save your progress</h2>
+    <p>Your name and email. We email you a one-tap link so you can take the course on any device — and earn a shareable certificate when you finish.</p>
+    <form class="capture" onsubmit="submitSignup(event)" novalidate>
+      <input type="text" name="name" required placeholder="Your name" aria-label="Your name" autocomplete="name">
+      <input type="email" name="email" required placeholder="you@work.com" aria-label="Your email" autocomplete="email">
+      <button class="btn" type="submit">Email me my link →</button>
+    </form>
+    <label class="consent"><input type="checkbox" id="cConsent" checked> Email me my access link and the occasional update — unsubscribe anytime.</label>
+    <p class="cprivacy">Passwordless: we email a secure link, nothing to remember. No spam.</p>`;
+  document.getElementById('modalScrim').classList.add('open');
+}
+async function submitSignup(e){ e.preventDefault();
+  const f=e.target, name=(f.querySelector('input[name=name]').value||'').trim(),
+        email=(f.querySelector('input[name=email]').value||'').trim(), ok=document.getElementById('cConsent');
+  if(name.length<1){ toast('Please enter your name'); return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ toast('Please enter a valid email'); return; }
+  if(ok&&!ok.checked){ toast('Please tick the consent box'); return; }
+  store.name=name; store.email=email; localStorage.setItem(KEY,JSON.stringify(store));
+  if(!SB){ toast('Backend unavailable — please try again'); return; }
+  const btn=f.querySelector('button'); btn.disabled=true; btn.textContent='Sending…';
+  const redirect=location.origin+location.pathname+'?d='+(PENDING_DAY||1);
+  const {error}=await SB.auth.signInWithOtp({email,options:{emailRedirectTo:redirect,data:{name}}});
+  if(error){ btn.disabled=false; btn.textContent='Email me my link →'; toast('Could not send link: '+error.message); return; }
+  checkInbox(email);
+}
+function checkInbox(email){
+  document.getElementById('modalBody').innerHTML=`<div class="big">\u{1F4E8}</div><h2>Check your inbox</h2>
+    <p>We sent a one-tap access link to <b>${esc(email)}</b>. Open it on any device to begin — and to pick up exactly where you left off, anytime.</p>
+    <p class="cprivacy">No email after a minute? Check spam, or <span class="signup-skip" role="button" tabindex="0" onclick="openSignup()" onkeydown="kbd(event,this)">use a different address</span>.</p>
+    <button class="btn ghost" style="margin-top:8px" onclick="closeModal()">Close</button>`;
+  document.getElementById('modalScrim').classList.add('open');
+}
+async function signOut(){ try{ if(SB) await SB.auth.signOut(); }catch(e){} USER=null; refreshAuth(); toast('Signed out'); go('home'); }
+
+async function onAuth(session){
+  USER=session?session.user:null;
+  if(USER){
+    if(USER.user_metadata&&USER.user_metadata.name&&!store.name) store.name=USER.user_metadata.name;
+    if(USER.email) store.email=USER.email;
+    await loadProgress();
+  }
+  refreshAuth();
+}
+async function loadProgress(){
+  if(!SB||!USER) return;
+  try{
+    const {data}=await SB.from('progress').select('*').eq('user_id',USER.id).maybeSingle();
+    if(data){
+      store.done=Array.isArray(data.done)?data.done:[]; store.answers=data.answers||{};
+      store.streak=data.streak||0; store.lastDate=data.last_date||null;
+      store.name=data.name||store.name; store.email=data.email||store.email;
+      store.cert_id=data.cert_id||null; store.completed_at=data.completed_at||null;
+      localStorage.setItem(KEY,JSON.stringify(store)); refreshProgress();
+    } else { saveProgress(true); }
+  }catch(e){}
+}
+function saveProgress(now){
+  if(!SB||!USER) return;
+  const row={user_id:USER.id,name:store.name||null,email:store.email||null,done:store.done,
+    answers:store.answers,streak:store.streak||0,last_date:store.lastDate||null,
+    cert_id:store.cert_id||null,completed_at:store.completed_at||null};
+  const run=()=>{ try{ SB.from('progress').upsert(row).then(()=>{},()=>{}); }catch(e){} };
+  if(now) run(); else { clearTimeout(saveTimer); saveTimer=setTimeout(run,800); }
+}
+function refreshAuth(){ const el=document.getElementById('authchip'); if(!el) return;
+  el.innerHTML = USER ? `<button class="who" onclick="signOut()" title="Sign out">${esc((store.name||store.email||'You').split(' ')[0])} ✓</button>` : ''; }
+
+function certUrl(id){ return location.origin+location.pathname+'?cert='+id; }
+function linkedinAddUrl(dt,certId){
+  const p=new URLSearchParams({startTask:'CERTIFICATION_NAME',name:'The AI Evals Playbook',
+    organizationName:'The Outcome Memo',issueYear:String(dt.getFullYear()),issueMonth:String(dt.getMonth()+1),
+    certId:certId||'',certUrl:certId?certUrl(certId):''});
+  return 'https://www.linkedin.com/profile/add?'+p.toString();
+}
+async function finishCourse(){
+  store.completed_at=store.completed_at||new Date().toISOString();
+  if(SB&&USER&&!store.cert_id){
+    try{ const {data}=await SB.from('certificates').insert({user_id:USER.id,name:store.name||'A PM'}).select('cert_id').maybeSingle();
+      if(data&&data.cert_id) store.cert_id=data.cert_id; }catch(e){}
+  }
+  save(); saveProgress(true); go('cert');
+}
+async function bootCert(id){
+  let name='',dt=null;
+  if(SB){ try{ const {data}=await SB.from('certificates').select('name,completed_at').eq('cert_id',id).maybeSingle();
+    if(data){ name=data.name; dt=data.completed_at; } }catch(e){} }
+  renderCert(name,dt,id,true);
+}
+function renderCert(name,dateISO,certId,pub){
+  const dt=new Date(dateISO||store.completed_at||Date.now());
+  const dstr=dt.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  const shareUrl=certId?certUrl(certId):location.origin+location.pathname;
+  const share='https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(shareUrl);
+  app.innerHTML=`<div class="view">
+   ${pub?'':`<div class="crumbs"><a onclick="go('home')" style="cursor:pointer">← Course home</a> · Certificate</div>`}
+   <div class="cert" id="certCard">
+     <div class="cert-top"><span class="cert-mk">◇</span> The AI Evals Playbook</div>
+     <div class="cert-kick">Certificate of Completion</div>
+     <div class="cert-name">${esc(name||'')}</div>
+     <p class="cert-body">completed the 10-day, no-code AI Evals course — and built a real, defensible eval practice with a one-page Eval Plan.</p>
+     <div class="cert-foot"><span>${dstr}</span><span>The Outcome Memo · in collaboration with PrepOS</span></div>
+   </div>
+   ${pub
+     ? `<div class="exportbar"><a class="btn" href="${location.origin+location.pathname}">Take the course free →</a></div>`
+     : `<div class="exportbar">
+         <a class="btn" href="${linkedinAddUrl(dt,certId)}" target="_blank" rel="noopener">Add to LinkedIn profile →</a>
+         <a class="btn ghost" href="${share}" target="_blank" rel="noopener">Share on LinkedIn</a>
+         <button class="btn ghost" onclick="downloadCert()">Download</button>
+         <button class="btn ghost" onclick="go('plan')">My Eval Plan</button>
+       </div>`}
+  </div>`;
+}
+function rr(x,a,b,w,h,r){ x.beginPath(); x.moveTo(a+r,b); x.arcTo(a+w,b,a+w,b+h,r); x.arcTo(a+w,b+h,a,b+h,r); x.arcTo(a,b+h,a,b,r); x.arcTo(a,b,a+w,b,r); x.closePath(); }
+function wrap(x,t,cx,cy,max,lh){ const ws=t.split(' '); let line='',y=cy; for(const word of ws){ const test=line+word+' '; if(x.measureText(test).width>max&&line){ x.fillText(line.trim(),cx,y); line=word+' '; y+=lh; } else line=test; } x.fillText(line.trim(),cx,y); }
+function downloadCert(){
+  const W=1200,H=820,c=document.createElement('canvas'); c.width=W;c.height=H; const x=c.getContext('2d');
+  x.fillStyle='#F5F6FB'; x.fillRect(0,0,W,H);
+  x.fillStyle='#fff'; rr(x,60,60,W-120,H-120,28); x.fill();
+  const g=x.createLinearGradient(60,0,W-60,0); g.addColorStop(0,'#6366F1'); g.addColorStop(.5,'#7C8CF8'); g.addColorStop(1,'#22B8A6');
+  x.save(); rr(x,60,60,W-120,H-120,28); x.clip(); x.fillStyle=g; x.fillRect(60,60,W-120,12); x.restore();
+  x.textAlign='center';
+  x.fillStyle='#71768a'; x.font='600 22px Inter,Arial,sans-serif'; x.fillText('THE AI EVALS PLAYBOOK',W/2,195);
+  x.fillStyle='#13151c'; x.font='600 24px Inter,Arial,sans-serif'; x.fillText('Certificate of Completion',W/2,252);
+  x.fillStyle='#5B5BD6'; x.font='700 60px Georgia,serif'; x.fillText(store.name||'',W/2,362);
+  x.fillStyle='#3b3f4c'; x.font='400 22px Inter,Arial,sans-serif';
+  wrap(x,'completed the 10-day, no-code AI Evals course and built a real, defensible eval practice.',W/2,418,W-360,32);
+  x.fillStyle='#71768a'; x.font='400 18px Inter,Arial,sans-serif';
+  x.fillText(new Date(store.completed_at||Date.now()).toLocaleDateString()+'    ·    The Outcome Memo  ×  PrepOS',W/2,H-150);
+  const a=document.createElement('a'); a.href=c.toDataURL('image/png'); a.download='ai-evals-certificate.png'; document.body.appendChild(a); a.click(); a.remove();
+}
+
+async function boot(){
+  renderGloss(''); refreshProgress();
+  if(SB){ try{ SB.auth.onAuthStateChange((_e,sess)=>{ onAuth(sess); });
+    const r=await SB.auth.getSession(); await onAuth(r&&r.data?r.data.session:null); }catch(e){} }
+  const q=new URLSearchParams(location.search);
+  const cert=q.get('cert'); if(cert){ return bootCert(cert); }
+  const d=parseInt(q.get('d')||'',10);
+  if(q.get('d')||q.get('code')||(location.hash||'').indexOf('access_token')>=0){ try{ history.replaceState({},'',location.pathname); }catch(e){} }
+  if(USER && d>=1 && d<=10) return go('day',d);
+  renderHome();
+}
+
+function todayStr(d){ d=d||new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function bumpStreak(){ const t=todayStr(); if(store.lastDate===t) return; const y=new Date(); y.setDate(y.getDate()-1);
+  store.streak=(store.lastDate===todayStr(y))?store.streak+1:1; store.lastDate=t; }
+function curStreak(){ if(!store.lastDate||!store.streak) return 0; const t=todayStr(); const y=new Date(); y.setDate(y.getDate()-1);
+  return (store.lastDate===t||store.lastDate===todayStr(y))?store.streak:0; }
 function save(){ localStorage.setItem(KEY, JSON.stringify(store)); refreshProgress(); }
 function isDone(n){ return store.done.includes(n); }
 function nextDay(){ for(let i=1;i<=10;i++) if(!isDone(i)) return i; return 10; }
 
 /* ============================ ROUTER ============================ */
 const app=document.getElementById('app');
+let CUR='home';
+let PENDING_DAY=1;
 function go(view,arg){ window.scrollTo(0,0);
+  if(view==='day' && !authed()){ PENDING_DAY=arg||1; return openSignup(); }
+  CUR=view;
   if(view==='home') renderHome();
   else if(view==='trail') renderTrail();
   else if(view==='day') renderDay(arg);
   else if(view==='plan') renderPlan();
+  else if(view==='read') renderRead();
+  else if(view==='sample') renderPlan(true);
+  else if(view==='cert') renderCert(store.name,store.completed_at,store.cert_id,false);
+  updateMode(); updateBar();
 }
+function updateMode(){ const r=CUR==='read';
+  const tr=document.getElementById('tog-trail'), rd=document.getElementById('tog-read');
+  if(tr) tr.classList.toggle('active',!r); if(rd) rd.classList.toggle('active',r); }
+function renderRead(){
+  app.innerHTML=`<div class="view read">
+   <div class="crumbs"><a onclick="go('home')" style="cursor:pointer">← Course home</a> · Study Notes</div>
+   <div class="readhero">
+     <span class="tag">The flowing read</span>
+     <h1 class="h">The whole eval story, <span class="grad">start to finish</span></h1>
+     <p>The same craft as the 10-day trail — but as one continuous read you can take in a single sitting. No exercises. Just the why, and how it all connects.</p>
+     <div class="rfacts"><span class="rf"><b>~35 min</b> read</span><span class="rf"><b>One</b> running example</span><span class="rf"><b>No</b> code</span><span class="rf"><b>12</b> stops</span></div>
+   </div>
+   <article class="doc">${document.getElementById('readsrc').innerHTML}</article>
+   <div class="readcta">
+     <h3 class="h">Ready to do it for real?</h3>
+     <p>Reading this was the map. The 10-day trail is the walk — one idea, one exercise a day, on your own AI feature.</p>
+     <button class="btn" onclick="go('day',1)">Start Day 1 →</button>
+   </div>
+  </div>`;
+}
+function updateBar(){ const b=document.getElementById('rbar'); if(!b) return;
+  if(CUR!=='read'){ b.style.width='0'; b.style.opacity='0'; return; } b.style.opacity='1'; setBar(); }
+function setBar(){ if(CUR!=='read') return; const h=document.documentElement;
+  const sc=h.scrollTop/((h.scrollHeight-h.clientHeight)||1);
+  const b=document.getElementById('rbar'); if(b) b.style.width=(Math.min(1,Math.max(0,sc))*100)+'%'; }
+addEventListener('scroll',setBar);
 
 /* ---------- HOME / LANDING ---------- */
 function renderHome(){
-  const nd=nextDay(), started=store.done.length>0;
+  const nd=nextDay(), started=store.done.length>0, st=curStreak();
+  const lastDone = store.done.length ? Math.max.apply(null,store.done) : 0;
+  const allDone = store.done.length>=10;
+  const resumeHTML = (started && !allDone) ? `<div class="resume">
+       <span class="rk">\u{1F525}</span>
+       <div class="rmeta">${lastDone?`<b>Last done:</b> Day ${lastDone} \u2014 ${DAYS[lastDone-1].title}. `:''}<span class="nx">Today \u2192 Day ${nd}: ${DAYS[nd-1].title}</span> \u00b7 ~12 min${st>=2?` \u00b7 ${st}-day streak`:''}</div>
+       <button class="btn sm" onclick="go('day',${nd})">Resume \u2192</button>
+     </div>` : '';
   app.innerHTML=`<div class="view">
    <div class="hero">
      <span class="tag">Free · 10 days · no code</span>
@@ -495,7 +1504,15 @@ function renderHome(){
        <button class="btn ghost" onclick="go('trail')">See all 10 days</button>
      </div>
      <div class="facts"><div class="fact"><b>0</b> lines of code</div><div class="fact"><b>1</b> real exercise a day</div><div class="fact">leave with <b>your</b> Eval Plan</div></div>
+     ${USER?`<div class="freenote" style="margin-top:6px">Signed in as ${esc(store.name||store.email||'you')} · progress saved to your account</div>`:''}
    </div>
+
+   ${resumeHTML}
+   <button class="readcard" onclick="go('read')">
+     <span class="ri">📖</span>
+     <span class="rt"><span class="rh">Prefer to read it all at once?</span><span class="rd">The whole eval story as one flowing read — no exercises.</span></span>
+     <span class="rb">Study Notes · 35 min →</span>
+   </button>
 
    <div class="sectitle">The journey — one step a day</div>
    <div class="lifecycle">
@@ -509,11 +1526,13 @@ function renderHome(){
    <div class="sectitle">You leave with a real deliverable</div>
    <div class="artifact-card">
      <div class="doc"><div class="l dn"></div><div class="l dn"></div><div class="l"></div><div class="l"></div><div class="l" style="width:60%"></div></div>
-     <div><h4>My Eval Plan</h4><p class="muted sm">Each exercise fills one section. By Day 10 it's a complete, one-page eval plan for one of your own features — not a certificate, a tool you can use Monday.</p></div>
+     <div><h4>My Eval Plan</h4><p class="muted sm">Each exercise fills one section. By Day 10 it's a complete, one-page eval plan for one of your own features — not a certificate, a tool you can use Monday.</p><button class="btn ghost sm" onclick="go('sample')" style="margin-top:10px">See a finished example \u2192</button></div>
    </div>
 
+   <div class="freenote">Free \u00b7 one-tap email sign-in \u00b7 your progress syncs across devices.</div>
+
    <div class="sectitle">The 10 days</div>
-   ${DAYS.map(d=>`<div class="tnode ${isDone(d.n)?'done':(d.n===nd?'today':'')} ${d.milestone==='halfway'?'flag':''} ${d.milestone==='finish'?'medal':''}" onclick="go('day',${d.n})">
+   ${DAYS.map(d=>`<div class="tnode ${isDone(d.n)?'done':(d.n===nd?'today':'')} ${d.milestone==='halfway'?'flag':''} ${d.milestone==='finish'?'medal':''}" role="button" tabindex="0" aria-label="Day ${d.n}: ${d.title}" onclick="go('day',${d.n})" onkeydown="kbd(event,this)">
        <div class="bead">${isDone(d.n)?'✓':(d.milestone==='finish'?'★':(d.milestone==='halfway'?'⚑':d.n))}</div>
        <div class="tcard"><div><div class="dlabel">DAY ${d.n}</div><div class="ttitle">${d.title}</div></div>
        ${d.n===nd?'<span class="chip today">TODAY</span>':isDone(d.n)?'<span class="chip done">DONE</span>':d.milestone==='halfway'?'<span class="chip flag">HALFWAY</span>':d.milestone==='finish'?'<span class="chip medal">FINISH</span>':''}</div>
@@ -528,7 +1547,7 @@ function renderTrail(){
    <div class="trail-head"><div><div class="sectitle" style="margin:0">Your trail</div><h2 class="h">${store.done.length} of 10 complete</h2></div>
      <button class="btn sm" onclick="go('day',${nd})">${store.done.length?'Continue':'Start'} →</button></div>
    <div class="trail">
-   ${DAYS.map(d=>`<div class="tnode ${isDone(d.n)?'done':(d.n===nd?'today':'')} ${d.milestone==='halfway'?'flag':''} ${d.milestone==='finish'?'medal':''}" onclick="go('day',${d.n})">
+   ${DAYS.map(d=>`<div class="tnode ${isDone(d.n)?'done':(d.n===nd?'today':'')} ${d.milestone==='halfway'?'flag':''} ${d.milestone==='finish'?'medal':''}" role="button" tabindex="0" aria-label="Day ${d.n}: ${d.title}" onclick="go('day',${d.n})" onkeydown="kbd(event,this)">
        <div class="bead">${isDone(d.n)?'✓':(d.milestone==='finish'?'★':(d.milestone==='halfway'?'⚑':d.n))}</div>
        <div class="tcard"><div><div class="dlabel">DAY ${d.n} · ${d.kick}</div><div class="ttitle">${d.title}</div></div>
        ${d.n===nd?'<span class="chip today">TODAY</span>':isDone(d.n)?'<span class="chip done">DONE</span>':d.milestone==='halfway'?'<span class="chip flag">HALFWAY</span>':d.milestone==='finish'?'<span class="chip medal">FINISH</span>':''}</div>
@@ -546,13 +1565,13 @@ function renderDay(n){
    <div class="scene">${d.scene}</div>
    <div class="lblock">${d.blocks}</div>
    <div class="example"><div class="x">Worked example</div>${d.example}</div>
-   <div class="pull"><div class="q">"${d.quote}"</div><span class="share" onclick="toast('Share card copied ✓')">↗ Share this</span></div>
+   <div class="pull"><div class="q">"${d.quote}"</div><span class="share" role="button" tabindex="0" onclick="shareQuote(${n})" onkeydown="kbd(event,this)">↗ Share this</span></div>
    <div class="tomorrow"><b>Tomorrow →</b> ${d.tomorrow}</div>
 
    <div class="exercise">
      <div class="eh"><span class="min">${d.ex.min}</span><h3>✍️ ${d.ex.title}</h3></div>
      <p class="ed">${d.ex.desc} <span class="muted">Saves into your Eval Plan.</span></p>
-     ${d.ex.fields.map((f,i)=>`<label>${f[0]}</label>${f[1]==='textarea'
+     ${d.ex.fields.map((f,i)=>`<label>${f[0]}<span class="qhint" tabindex="0" role="button" aria-label="Show a suggested AI prompt for this question">i<span class="qtip"><span class="qth">Paste this into your AI chat</span><span class="qp">${(PROMPTS[n]&&PROMPTS[n][i])?esc(PROMPTS[n][i]):'\u2014'}</span><button class="qcopy" onclick="copyPrompt(${n},${i})">Copy prompt</button></span></span></label>${f[1]==='textarea'
         ?`<textarea rows="3" placeholder="${f[2]}" oninput="ans(${n},${i},this.value)">${a[i]||''}</textarea>`
         :`<input placeholder="${f[2]}" value="${(a[i]||'').replace(/"/g,'&quot;')}" oninput="ans(${n},${i},this.value)">`}`).join('')}
      <div class="tip">💡 ${d.ex.tip}</div>
@@ -564,9 +1583,9 @@ function renderDay(n){
    </div>
   </div>`;
 }
-function ans(n,i,v){ (store.answers[n]=store.answers[n]||{})[i]=v; localStorage.setItem(KEY,JSON.stringify(store)); }
+function ans(n,i,v){ (store.answers[n]=store.answers[n]||{})[i]=v; localStorage.setItem(KEY,JSON.stringify(store)); saveProgress(); }
 function complete(n){
-  if(!isDone(n)){ store.done.push(n); save();
+  if(!isDone(n)){ store.done.push(n); bumpStreak(); save(); saveProgress();
     const d=DAYS[n-1];
     if(d.milestone==='halfway') return milestone('halfway',n);
     if(d.milestone==='finish') return milestone('finish',n);
@@ -574,25 +1593,118 @@ function complete(n){
   if(n<10) go('day',n+1); else go('plan');
 }
 
-/* ---------- PLAN ---------- */
-function renderPlan(){
-  const pct=Math.round(store.done.length/10*100);
+/* ---------- PLAN (filled, real) ---------- */
+function esc(x){ return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function kbd(e,el){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } }
+function fallbackCopy(txt,cb){ const ta=document.createElement('textarea'); ta.value=txt;
+  ta.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); if(cb) cb(); }
+function copyText(txt,msg){ const ok=()=>toast(msg||'Copied ✓');
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok,()=>fallbackCopy(txt,ok)); }
+  else fallbackCopy(txt,ok); }
+function shareQuote(n){ const d=DAYS[n-1];
+  copyText('“'+d.quote+'”\n\n— The AI Evals Playbook · Day '+n+' ('+d.title+'). A free, no-code 10-day course.','Quote copied ✓'); }
+const SHARE_HALF="I'm halfway through learning AI evals — I can read my AI's real data and name what's breaking. No code required. (The AI Evals Playbook — a free 10-day course.)";
+const SHARE_DONE="I just built a real eval practice for my AI product in 10 days — no code. Here's my Eval Plan. (The AI Evals Playbook — a free course.)";
+
+function copyPrompt(n,i){ const p=PROMPTS[n]&&PROMPTS[n][i]; if(p) copyText(p,'Prompt copied ✓'); }
+const PROMPTS={
+ 1:{0:"I'm a product manager. Help me choose ONE AI feature to run evaluations on. My product does: [describe your product]. Suggest the single feature whose quality matters most and would benefit most from systematic evals, and say why in 2 lines.",
+    1:"Write one crisp sentence, in plain language a non-technical stakeholder would understand, describing what this AI feature is supposed to do: [describe the feature].",
+    2:"Help me honestly describe my current informal way of judging whether this AI feature is 'good': [describe how you check it today]. Summarize it in 1-2 sentences and name its blind spots.",
+    3:"Here's a bad output from my AI feature — input: [paste], output: [paste]. In one plain sentence a stakeholder would understand, describe what went wrong."},
+ 2:{0:"Using the Three Gulfs (Comprehension = I don't know my real data; Specification = my prompt was vague; Generalization = it fails on rare inputs), classify this failure and say why in one line: [describe the failure].",
+    1:"Classify this second failure as a Comprehension, Specification, or Generalization gulf and say why in one line: [describe the failure].",
+    2:"Given these failures: [paste them], which of the Three Gulfs (Comprehension, Specification, Generalization) is my biggest problem right now? One line, with a reason."},
+ 3:{0:"I'll paste ~15 real outputs from my AI feature. For each, write ONE short, specific, plain-language note about what went well or wrong — no preset categories, and don't fix anything. Here they are: [paste inputs + outputs]."},
+ 4:{0:"Here are my notes on my AI feature's outputs: [paste notes]. Group them into 3-6 recurring failure modes. Name each as a specific behavior (not 'accuracy issues'), count how many notes fall in each, and suggest a severity (low/med/high). Return a table I can edit.",
+    1:"Given these failure modes with counts and severities: [paste them], which ONE should I fix first if I rank by frequency × severity? Name it and give a one-line reason."},
+ 5:{0:"Write a strict binary PASS/FAIL rubric for this failure mode of my AI feature: [name the failure mode]. It must be specific enough that two people grade the same output identically. Format it as 'FAIL if … . PASS otherwise.'",
+    1:"Generate 10 diverse test questions for my AI feature ([describe it]). Deliberately include hard cases: angry users, non-English, vague, and edge cases that would trip this failure mode: [name it]. Number them."},
+ 6:{0:"For each of my failure modes [paste them], tell me whether to grade it with a CODE evaluator (objective, rule-shaped) or an LLM-as-judge (subjective, judgment) — one line of reasoning each.",
+    1:"Write an LLM-as-judge prompt that grades whether a reply from my AI feature passes this rule: [state the rule]. It should take the input and output, answer PASS or FAIL, then give one sentence of reasoning. Keep it binary."},
+ 7:{0:"I hand-labeled 20 outputs PASS/FAIL and ran my LLM-judge on the same 20. Here are both sets of labels: [paste]. Tell me how many we agreed and disagreed on.",
+    1:"From these results — number of real failures, number the judge flagged, and how many overlapped: [paste] — calculate precision (real flags ÷ all flags) and recall (caught ÷ all real failures) as rough percentages, and explain each in one line.",
+    2:"My LLM-judge scored precision ~[__]% and recall ~[__]%. Is it trustworthy to run at scale yet? If not, give me 2 concrete ways to improve the judge prompt."},
+ 8:{0:"My AI feature works like this: [describe — does it look things up, take actions, or hold a conversation?]. Classify it as simple Q&A, RAG, agent, or multi-turn (it can be more than one) and explain why in one line.",
+    1:"My AI feature is [RAG / agent / multi-turn — say which]. List the 2-3 things I should evaluate beyond the final answer (e.g. retrieval, trajectory, memory), phrased as plain questions I can ask my engineers."},
+ 9:{0:"Write a one-line quality-gate rule I can hand to engineering: before any prompt or model change to my AI feature ships, it must pass our eval set.",
+    1:"Suggest a lightweight weekly eval ritual for my AI feature: how many real outputs to re-sample, how to score them, and where to log the number — about 20 minutes a week.",
+    2:"In one line: who should own the ongoing eval cadence for an AI feature on a product team, and why is it usually the PM?"},
+ 10:{0:"My #1 failure mode is [name it]. Suggest the cheapest first fix (usually a prompt change) and write the exact instruction I could add to my prompt to reduce it. Then remind me to re-run the eval.",
+     1:"Write a 5-line eval report for stakeholders about my AI feature using these numbers: [what you measured, pass rates, what's still failing, the next fix, your cadence]. Use the headings: Measured / Quality / Still failing / Next fix / Kept honest."}
+};
+
+const SAMPLE={
+ 1:{0:"Refund answers in our customer-support assistant",
+    1:"Answer customer refund questions accurately, in a calm tone, and hand off legal or angry cases to a human.",
+    2:"I open it, try a few refund questions, and if the replies look reasonable I call it good.",
+    3:"It told a customer we offer a 30-day refund window — we don't offer that at all."},
+ 2:{0:"Invents policies → Specification: the prompt never said 'only state approved policies'.",
+    1:"Chokes on pasted email threads → Comprehension: I'd never looked at how messy real inputs are.",
+    2:"Specification — most failures trace back to vague instructions."},
+ 3:{0:"Output 1 → invented a 30-day window we don't have ❌\nOutput 2 → legal threat, didn't escalate ❌\nOutput 3 → accurate and clear ✅\nOutput 4 → answered a French question in English ⚠️\nOutput 5 → choked on a 40-line pasted thread ⚠️"},
+ 4:{0:"1. Fabricates a policy that doesn't exist · 6/20 · High\n2. Fails to escalate legal/angry cases · 3/20 · High\n3. Replies in the wrong language · 2/20 · Medium\n4. Chokes on long/messy input · 2/20 · Low",
+    1:"Fabricates a policy that doesn't exist"},
+ 5:{0:"PASS if every refund policy mentioned is on our approved list (or it says it'll check). FAIL if it states any policy that isn't.",
+    1:"6 real questions from Day 3 + 4 AI-generated edge cases (refund after 6 months, a Spanish question, a vague 'money back?', an angry one). Baseline: 6/10 pass = 60%."},
+ 6:{0:"Fabricates policy → LLM-judge (compare claims to policy by meaning)\nFails to escalate → Code eval (did the hand-off fire?)\nWrong language → Code eval (input vs output language)\nRobotic tone → LLM-judge (judgment call)",
+    1:"You are grading a support reply. It PASSES only if every refund policy it names is on this approved list: [list]. Otherwise FAIL. Customer: {input}. Reply: {output}. Answer PASS or FAIL, then one sentence why."},
+ 7:{0:"Agreed 17 / disagreed 3 (out of 20)",
+    1:"precision ~67% (4/6) · recall ~80% (4/5)",
+    2:"Not yet — precision was shaky. Added two pass/fail examples to the judge prompt and tightened the rule; re-run reached ~90%."},
+ 8:{0:"RAG today, heading toward an agent (it looks up policy docs; will soon issue refunds).",
+    1:"1. Retrieval: did it pull the correct, current policy doc?\n2. Trajectory: does it verify eligibility before issuing a refund — exactly once?\n3. Multi-turn: if the customer adds 'also cancel my subscription', does it keep both requests?"},
+ 9:{0:"Run the 30-case eval set; block the change if pass-rate drops below the current version.",
+    1:"Every Monday: re-score 50 real conversations with the LLM-judge, log the number in a shared sheet.",
+    2:"Me (the PM)."},
+ 10:{0:"Fabricating policy → tighten the prompt: 'only state policies from this list; if unsure, say you'll check.' Then re-run the eval.",
+     1:"Measured: policy accuracy, escalation, language match.\nQuality: policy check now passes 91% (was 60%); escalation 100%; language 96%.\nStill failing: ~9% on rare product types.\nNext fix: add those types to the approved source; expect ~97%.\nKept honest: eval gate on every change; 50 conversations re-scored weekly."}
+};
+
+function renderPlan(sample){
+  const A = sample ? SAMPLE : (store.answers||{});
+  const isd = sample ? (()=>true) : isDone;
+  const total = DAYS.length;
+  const doneCount = sample ? total : store.done.length;
+  const pct = Math.round(doneCount/total*100);
+  const feature = (A[1]&&A[1][0]) ? A[1][0].trim() : '';
+  const secs = DAYS.map(d=>{
+    const a=A[d.n]||{};
+    const filled = d.ex.fields.some((f,i)=>(a[i]||'').trim());
+    const qa = d.ex.fields.map((f,i)=>{ const v=(a[i]||'').trim();
+      return `<div class="qa"><div class="ql">${f[0]}</div><div class="qv ${v?'':'blank'}">${v?esc(v):'— not filled in yet —'}</div></div>`; }).join('');
+    return `<div class="psec ${isd(d.n)?'done':''} ${filled?'':'empty'}">
+       <div class="ph"><span class="pn">${isd(d.n)?'✓':d.n}</span><h4>${d.ex.title}</h4>
+         <span class="pday">DAY ${d.n}</span>${sample?'':`<span class="edit" role="button" tabindex="0" onclick="go('day',${d.n})" onkeydown="kbd(event,this)">Edit</span>`}</div>
+       ${qa}</div>`; }).join('');
   app.innerHTML=`<div class="view">
-   <div class="sectitle" style="margin-top:0">Your take-home deliverable</div>
-   <h2 class="h" style="font-size:25px">My Eval Plan</h2>
-   <p class="muted sm">${store.done.length}/10 sections complete · this is what you walk away with.</p>
-   <div class="plan-prog"><i style="width:${pct}%"></i></div>
-   <div class="planlist">
-   ${DAYS.map(d=>`<div class="pitem ${isDone(d.n)?'done':''}" onclick="go('day',${d.n})" style="cursor:pointer">
-       <div class="s">${isDone(d.n)?'✓':d.n}</div>
-       <div class="pt">${d.ex.title}</div><div class="pd">Day ${d.n}</div></div>`).join('')}
-   </div>
-   <div class="exportbar">
-     <button class="btn" onclick="toast('Exported (mockup) ✓')">Export plan ▾</button>
-     <button class="btn ghost" onclick="go('home')">Back to course</button>
-   </div>
+   ${sample?`<div class="samplebar"><span><b>Example plan</b> — a finished plan for a customer-support refund assistant.</span><button class="btn sm" onclick="go('day',1)">Start your own →</button></div>`:''}
+   <div class="crumbs"><a onclick="go('home')" style="cursor:pointer">← Course home</a> · ${sample?'Example plan':'Your Eval Plan'}</div>
+   <h2 class="h" style="font-size:25px">${sample?'Example Eval Plan':'My Eval Plan'}${feature?` — <span class="muted" style="font-weight:600">${esc(feature)}</span>`:''}</h2>
+   <p class="muted sm">${sample?'This is what a completed plan looks like — yours will be about your own feature.':doneCount+'/'+total+' sections complete · this is your take-home deliverable.'}</p>
+   ${sample?'':`<div class="plan-prog"><i style="width:${pct}%"></i></div>`}
+   <div class="plandoc">${secs}</div>
+   ${sample
+     ? `<div class="exportbar"><button class="btn" onclick="go('day',1)">Start your own plan →</button><button class="btn ghost" onclick="go('home')">Back to course</button></div>`
+     : `<div class="exportbar"><button class="btn" onclick="copyPlan()">Copy plan</button><button class="btn ghost" onclick="downloadPlan()">Download .md</button><button class="btn ghost" onclick="window.print()">Print / PDF</button><button class="btn ghost" onclick="go('home')">Back to course</button></div>`}
   </div>`;
 }
+function planMarkdown(){
+  const A=store.answers||{}; const feature=(A[1]&&A[1][0]&&A[1][0].trim())?A[1][0].trim():'(unnamed feature)';
+  let md='# My Eval Plan — '+feature+'\n\n_Built with The AI Evals Playbook — a free, no-code 10-day course._\n\n';
+  DAYS.forEach(d=>{ const a=A[d.n]||{};
+    md+='## Day '+d.n+' — '+d.ex.title+'\n\n';
+    d.ex.fields.forEach((f,i)=>{ const v=(a[i]||'').trim();
+      md+='**'+f[0]+'**\n\n'+(v?v:'_(not filled in yet)_')+'\n\n'; });
+  });
+  return md.trim()+'\n';
+}
+function copyPlan(){ copyText(planMarkdown(),'Plan copied as Markdown ✓'); }
+function downloadPlan(){ try{ const blob=new Blob([planMarkdown()],{type:'text/markdown'});
+    const u=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=u; a.download='my-eval-plan.md';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(u),1000);
+    toast('Downloaded my-eval-plan.md ✓'); }catch(e){ copyText(planMarkdown(),'Copied — paste into a file ✓'); } }
 
 /* ---------- MILESTONE MODAL ---------- */
 function milestone(type,n){
@@ -600,13 +1712,13 @@ function milestone(type,n){
   if(type==='halfway'){ b.innerHTML=`<div class="big">⚑</div><h2>Halfway there!</h2>
      <p>You can now read your own data and name what's breaking — that already puts you ahead of most teams.</p>
      <div class="sharecard"><small>AI Evals Playbook · Day 5</small>"I'm halfway through learning AI evals — I can read my AI's real data and name what's breaking. No code required."</div>
-     <div class="row"><button class="btn ghost" onclick="toast('Share card copied ✓')">Share</button>
+     <div class="row"><button class="btn ghost" onclick="copyText(SHARE_HALF,'Copied \u2713')">Share</button>
        <button class="btn" onclick="closeModal();go('day',6)">Keep going →</button></div>`; }
   else { b.innerHTML=`<div class="big">🏅</div><h2>You did it.</h2>
      <p>Ten days ago "is our AI good?" was a shrug. Now you can answer it with data, defend it, and keep it honest. You went from couch to 5k.</p>
      <div class="sharecard"><small>AI Evals Playbook · Complete</small>"I just built a real eval practice for my AI product in 10 days — no code. Here's my Eval Plan."</div>
-     <div class="row"><button class="btn ghost" onclick="toast('Share card copied ✓')">Share</button>
-       <button class="btn" onclick="closeModal();go('plan')">See my Eval Plan →</button></div>`; }
+     <div class="row"><button class="btn ghost" onclick="copyText(SHARE_DONE,'Copied \u2713')">Share</button>
+       <button class="btn" onclick="closeModal();finishCourse()">Get your certificate →</button></div>`; }
   ms.classList.add('open');
 }
 function closeModal(){ document.getElementById('modalScrim').classList.remove('open'); }
@@ -634,10 +1746,11 @@ function toast(msg){ let t=document.getElementById('toast');
 function refreshProgress(){ const p=store.done.length;
   document.getElementById('progbar').style.width=(p/10*100)+'%';
   document.getElementById('progtxt').textContent=p+'/10';
-  document.getElementById('streak').textContent='🔥 '+p; }
+  const st=curStreak(), el=document.getElementById('streak');
+  el.textContent='\u{1F525} '+st; el.title=(st===1?'1-day streak':st+'-day streak'); }
 
 /* ---------- boot ---------- */
-renderGloss(''); refreshProgress(); renderHome();
+boot();
 </script>
 </body>
 </html>
