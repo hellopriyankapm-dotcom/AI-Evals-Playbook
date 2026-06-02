@@ -402,19 +402,33 @@ img.aphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;bor
   border-radius:999px;padding:6px 11px;cursor:pointer;font-family:inherit}
 @media(max-width:560px){.authchip{display:none}}
 /* ---------- certificate ---------- */
-.cert{background:#fff;border:1px solid var(--line);border-radius:22px;padding:44px 40px;text-align:center;
-  box-shadow:var(--shadow);position:relative;overflow:hidden;margin-top:8px}
-.cert::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:var(--aurora)}
-.cert-top{font-family:var(--serif);font-weight:700;font-size:14px;color:var(--muted);letter-spacing:.4px;
-  margin-bottom:22px;display:flex;align-items:center;justify-content:center;gap:8px}
-.cert-top .cert-mk{width:24px;height:24px;border-radius:7px;background:var(--aurora);color:#fff;
-  display:inline-flex;align-items:center;justify-content:center;font-size:12px}
-.cert-kick{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
-.cert-name{font-family:var(--serif);font-weight:700;font-size:42px;color:var(--primary);margin:10px 0 8px;line-height:1.1}
-.cert-body{font-size:15px;color:var(--ink-2);max-width:520px;margin:0 auto 26px;line-height:1.6}
-.cert-foot{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px solid var(--line);
-  padding-top:16px;gap:12px;flex-wrap:wrap}
-@media(max-width:560px){.cert{padding:30px 22px}.cert-name{font-size:30px}.cert-foot{flex-direction:column;text-align:center;gap:4px}}
+.cert{position:relative;background:#fff;border:1px solid var(--line);border-radius:24px;padding:48px 44px 32px;
+  text-align:center;box-shadow:0 24px 60px rgba(30,30,70,.13);overflow:hidden;margin-top:8px}
+.cert::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:var(--aurora)}
+.cert::after{content:"";position:absolute;right:-70px;bottom:-70px;width:240px;height:240px;border-radius:50%;
+  background:var(--aurora-soft);opacity:.5;pointer-events:none}
+.cert>*{position:relative}
+.cert-seal{width:78px;height:78px;border-radius:50%;margin:4px auto 18px;background:var(--aurora);color:#fff;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px rgba(91,91,214,.4)}
+.cert-seal svg{width:40px;height:40px}
+.cert-kick{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);font-weight:700}
+.cert-name{font-family:var(--serif);font-weight:700;font-size:46px;color:var(--ink);margin:8px 0 8px;line-height:1.05}
+.cert-body{font-size:15px;color:var(--ink-2);max-width:560px;margin:0 auto 18px;line-height:1.6}
+.cert-body b{color:var(--ink);font-weight:600}
+.cert-skills{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:28px}
+.cert-skills span{font-size:11.5px;font-weight:600;color:var(--primary);background:var(--primary-soft);border-radius:999px;padding:5px 11px}
+.cert-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid var(--line);
+  padding-top:18px;text-align:left;flex-wrap:wrap}
+.cert-foot .cf-by{font-size:13px;color:var(--ink-2)}
+.cert-foot .cf-by b{color:var(--ink);font-weight:600}
+.cert-foot .cf-collab{margin-top:9px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.cert-prepos{display:inline-flex;align-items:center;gap:5px;background:#34d399;color:#062d20;border-radius:8px;
+  padding:5px 9px;font-family:var(--serif);font-weight:700;font-size:12px}
+.cert-prepos svg{width:12px;height:12px}
+.cert-foot .cf-meta{text-align:right;font-size:12px;color:var(--muted);margin-left:auto}
+.cert-foot .cf-verify{margin-top:4px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px;color:var(--muted)}
+@media(max-width:560px){.cert{padding:34px 22px 26px}.cert-name{font-size:32px}
+  .cert-foot{flex-direction:column;text-align:center;align-items:center}.cert-foot .cf-meta{text-align:center;margin-left:0}}
 </style>
 </head>
 <body>
@@ -1381,41 +1395,68 @@ function renderCert(name,dateISO,certId,pub){
   const dstr=dt.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
   const shareUrl=certId?certUrl(certId):location.origin+location.pathname;
   const share='https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(shareUrl);
+  const spark='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>';
   app.innerHTML=`<div class="view">
    ${pub?'':`<div class="crumbs"><a onclick="go('home')" style="cursor:pointer">← Course home</a> · Certificate</div>`}
    <div class="cert" id="certCard">
-     <div class="cert-top"><span class="cert-mk">◇</span> The AI Evals Playbook</div>
+     <div class="cert-seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg></div>
      <div class="cert-kick">Certificate of Completion</div>
      <div class="cert-name">${esc(name||'')}</div>
-     <p class="cert-body">completed the 10-day, no-code AI Evals course — and built a real, defensible eval practice with a one-page Eval Plan.</p>
-     <div class="cert-foot"><span>${dstr}</span><span>The Outcome Memo · in collaboration with PrepOS</span></div>
+     <p class="cert-body">has completed <b>The AI Evals Playbook</b> — the 10-day, no-code course — and built a real, defensible eval practice with a one-page Eval Plan.</p>
+     <div class="cert-skills"><span>Error analysis</span><span>Failure modes</span><span>Binary rubrics</span><span>LLM-as-judge</span><span>Precision &amp; recall</span><span>Eval cadence</span></div>
+     <div class="cert-foot">
+       <div><div class="cf-by">Issued by <b>The Outcome Memo</b></div>
+         <div class="cf-collab">in collaboration with <span class="cert-prepos">${spark}PrepOS</span></div></div>
+       <div class="cf-meta">${dstr}${certId?`<div class="cf-verify">Verify · ${String(certId).slice(0,8)}</div>`:''}</div>
+     </div>
    </div>
    ${pub
      ? `<div class="exportbar"><a class="btn" href="${location.origin+location.pathname}">Take the course free →</a></div>`
      : `<div class="exportbar">
          <a class="btn" href="${linkedinAddUrl(dt,certId)}" target="_blank" rel="noopener">Add to LinkedIn profile →</a>
          <a class="btn ghost" href="${share}" target="_blank" rel="noopener">Share on LinkedIn</a>
-         <button class="btn ghost" onclick="downloadCert()">Download</button>
+         <button class="btn ghost" onclick="downloadCert()">Download image</button>
          <button class="btn ghost" onclick="go('plan')">My Eval Plan</button>
        </div>`}
   </div>`;
 }
 function rr(x,a,b,w,h,r){ x.beginPath(); x.moveTo(a+r,b); x.arcTo(a+w,b,a+w,b+h,r); x.arcTo(a+w,b+h,a,b+h,r); x.arcTo(a,b+h,a,b,r); x.arcTo(a,b,a+w,b,r); x.closePath(); }
 function wrap(x,t,cx,cy,max,lh){ const ws=t.split(' '); let line='',y=cy; for(const word of ws){ const test=line+word+' '; if(x.measureText(test).width>max&&line){ x.fillText(line.trim(),cx,y); line=word+' '; y+=lh; } else line=test; } x.fillText(line.trim(),cx,y); }
+function star4(x,cx,cy,r){ x.beginPath(); x.moveTo(cx,cy-r);
+  x.quadraticCurveTo(cx+r*0.18,cy-r*0.18,cx+r,cy); x.quadraticCurveTo(cx+r*0.18,cy+r*0.18,cx,cy+r);
+  x.quadraticCurveTo(cx-r*0.18,cy+r*0.18,cx-r,cy); x.quadraticCurveTo(cx-r*0.18,cy-r*0.18,cx,cy-r); x.closePath(); }
 function downloadCert(){
   const W=1200,H=820,c=document.createElement('canvas'); c.width=W;c.height=H; const x=c.getContext('2d');
-  x.fillStyle='#F5F6FB'; x.fillRect(0,0,W,H);
-  x.fillStyle='#fff'; rr(x,60,60,W-120,H-120,28); x.fill();
-  const g=x.createLinearGradient(60,0,W-60,0); g.addColorStop(0,'#6366F1'); g.addColorStop(.5,'#7C8CF8'); g.addColorStop(1,'#22B8A6');
-  x.save(); rr(x,60,60,W-120,H-120,28); x.clip(); x.fillStyle=g; x.fillRect(60,60,W-120,12); x.restore();
+  x.fillStyle='#EEF0FF'; x.fillRect(0,0,W,H);
+  x.save(); x.shadowColor='rgba(30,30,70,.18)'; x.shadowBlur=44; x.shadowOffsetY=20;
+  x.fillStyle='#fff'; rr(x,70,58,W-140,H-128,30); x.fill(); x.restore();
+  const g=x.createLinearGradient(70,0,W-70,0); g.addColorStop(0,'#6366F1'); g.addColorStop(.5,'#7C8CF8'); g.addColorStop(1,'#22B8A6');
+  x.save(); rr(x,70,58,W-140,H-128,30); x.clip(); x.fillStyle=g; x.fillRect(70,58,W-140,14); x.restore();
+  const cx=W/2, sy=176, sr=46;
+  const sg=x.createLinearGradient(cx-sr,sy-sr,cx+sr,sy+sr); sg.addColorStop(0,'#6366F1'); sg.addColorStop(1,'#22B8A6');
+  x.beginPath(); x.arc(cx,sy,sr,0,Math.PI*2); x.fillStyle=sg; x.fill();
+  x.strokeStyle='#fff'; x.lineWidth=7; x.lineCap='round'; x.lineJoin='round';
+  x.beginPath(); x.moveTo(cx-19,sy+2); x.lineTo(cx-5,sy+16); x.lineTo(cx+22,sy-15); x.stroke();
   x.textAlign='center';
-  x.fillStyle='#71768a'; x.font='600 22px Inter,Arial,sans-serif'; x.fillText('THE AI EVALS PLAYBOOK',W/2,195);
-  x.fillStyle='#13151c'; x.font='600 24px Inter,Arial,sans-serif'; x.fillText('Certificate of Completion',W/2,252);
-  x.fillStyle='#5B5BD6'; x.font='700 60px Georgia,serif'; x.fillText(store.name||'',W/2,362);
+  x.fillStyle='#71768a'; x.font='700 18px Inter,Arial,sans-serif'; x.fillText('C E R T I F I C A T E   O F   C O M P L E T I O N',cx,sy+sr+42);
+  x.fillStyle='#13151c'; x.font='700 64px Georgia,serif'; x.fillText(store.name||'',cx,sy+sr+118);
   x.fillStyle='#3b3f4c'; x.font='400 22px Inter,Arial,sans-serif';
-  wrap(x,'completed the 10-day, no-code AI Evals course and built a real, defensible eval practice.',W/2,418,W-360,32);
-  x.fillStyle='#71768a'; x.font='400 18px Inter,Arial,sans-serif';
-  x.fillText(new Date(store.completed_at||Date.now()).toLocaleDateString()+'    ·    The Outcome Memo  ×  PrepOS',W/2,H-150);
+  wrap(x,'has completed The AI Evals Playbook — the 10-day, no-code course — and built a real, defensible eval practice.',cx,sy+sr+168,W-360,32);
+  x.fillStyle='#8a8fa3'; x.font='500 15px Inter,Arial,sans-serif';
+  x.fillText('Error analysis  ·  Failure modes  ·  Binary rubrics  ·  LLM-as-judge  ·  Precision & recall  ·  Eval cadence',cx,sy+sr+228);
+  x.strokeStyle='#E7E9F2'; x.lineWidth=1; x.beginPath(); x.moveTo(120,H-158); x.lineTo(W-120,H-158); x.stroke();
+  x.textAlign='left'; x.fillStyle='#3b3f4c'; x.font='400 16px Inter,Arial,sans-serif'; x.fillText('Issued by ',130,H-116);
+  let iw=x.measureText('Issued by ').width; x.fillStyle='#13151c'; x.font='600 16px Inter,Arial,sans-serif'; x.fillText('The Outcome Memo',130+iw,H-116);
+  x.fillStyle='#71768a'; x.font='400 14px Inter,Arial,sans-serif'; x.fillText('in collaboration with',130,H-88);
+  const cw=x.measureText('in collaboration with').width;
+  x.font='700 15px Georgia,serif'; const lblw=x.measureText('PrepOS').width;
+  const px=130+cw+12, py=H-104, ph=27, pw=lblw+40;
+  x.fillStyle='#34d399'; rr(x,px,py,pw,ph,8); x.fill();
+  x.fillStyle='#062d20'; star4(x,px+15,py+ph/2,5.5); x.fill();
+  x.textBaseline='middle'; x.fillText('PrepOS',px+26,py+ph/2+1); x.textBaseline='alphabetic';
+  x.textAlign='right'; x.fillStyle='#71768a'; x.font='400 15px Inter,Arial,sans-serif';
+  x.fillText(new Date(store.completed_at||Date.now()).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}),W-130,H-116);
+  if(store.cert_id){ x.fillStyle='#a0a4b3'; x.font='400 12px ui-monospace,monospace'; x.fillText('Verify · '+String(store.cert_id).slice(0,8),W-130,H-90); }
   const a=document.createElement('a'); a.href=c.toDataURL('image/png'); a.download='ai-evals-certificate.png'; document.body.appendChild(a); a.click(); a.remove();
 }
 
@@ -1508,12 +1549,6 @@ function renderHome(){
    </div>
 
    ${resumeHTML}
-   <button class="readcard" onclick="go('read')">
-     <span class="ri">📖</span>
-     <span class="rt"><span class="rh">Prefer to read it all at once?</span><span class="rd">The whole eval story as one flowing read — no exercises.</span></span>
-     <span class="rb">Study Notes · 35 min →</span>
-   </button>
-
    <div class="sectitle">The journey — one step a day</div>
    <div class="lifecycle">
      <span class="lc">Look at your data <span class="d">· Days 1–4</span></span><span class="arr">→</span>
